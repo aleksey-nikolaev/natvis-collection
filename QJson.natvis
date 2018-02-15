@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <Type Name="QJsonObject">
+    <Expand>
+      <Item Name="object null" Condition="!this->o">nullptr</Item>
+      <CustomListItems Condition="!!this->o">
+        <Variable Name="n" InitialValue="uint(((Qt5Cored.dll!QJsonPrivate::Base*)o)->length.val >> 1)"/>
+        <Item Name="objects [{n,d}]" Condition="n  &lt; 10000">(Qt5Cored.dll!QJsonPrivate::Object*)(this->o)</Item>
+        <Item Name="object corrupted" Condition="!(n  &lt; 10000)">(void*)this->o</Item>
+      </CustomListItems>
+    </Expand>
+  </Type>
+
+  <Type Name="QJsonArray">
+    <Expand>
+      <Item Name="array null" Condition="!this->a">nullptr</Item>
+      <CustomListItems Condition="!!this->a">
+        <!--<Item Name="data">(Qt5Cored.dll!QJsonPrivate::Data*)d</Item>-->
+        <Variable Name="n" InitialValue="uint(((Qt5Cored.dll!QJsonPrivate::Base*)this->a)->length.val >> 1)"/>
+        <Item Name="array [{n,d}]" Condition="n  &lt; 10000">(Qt5Cored.dll!QJsonPrivate::Array*)this->a</Item>
+        <Item Name="array corrupted" Condition="!(n  &lt; 10000)">(void*)this->a</Item>
+      </CustomListItems>
+    </Expand>
+  </Type>
+
+  <Type Name="QJsonValueRef">
+    <DisplayString Condition="!is_object">array</DisplayString>
+    <DisplayString Condition="is_object">object [{index,d}]</DisplayString>
+    <Expand>
+      <CustomListItems Condition="!is_object">
+        <Item Name="array" >a->a</Item>
+      </CustomListItems>
+      <CustomListItems Condition="is_object">
+        <!--reinterpret_cast<Entry *>(((char *)this) + table()[i]);-->
+        <Variable Name="base" InitialValue="(char*)(o->o)"/>
+        <Variable Name="of" InitialValue="((Qt5Cored.dll!QJsonPrivate::Base*)base)->tableOffset.val"/>
+        <Variable Name="len" InitialValue="((Qt5Cored.dll!QJsonPrivate::Base*)base)->length.val >> 1"/>
+        <Variable Name="tabl" InitialValue="(uint*)(base + of)"/>
+        <Variable Name="pk" InitialValue="(void*)0"/>
+        <If Condition="of &lt; 10000 &amp;&amp; tabl &amp;&amp; len &lt; 10000">
+          <Exec>pk = reinterpret_cast&lt;void*&gt;(base + tabl[index])</Exec>
+          <Item Name="object">((Qt5Cored.dll!QJsonPrivate::Entry *)pk)->value</Item>
+        </If>
+        <Else>
+          <Item Name="object corrupted">0</Item>
+        </Else>
+      </CustomListItems>
+    </Expand>
+  </Type>
+
+  <Type Name="QJsonValue">
+    <Expand>
+      <Item Name="null" Condition="t == 0">nullptr</Item>
+      <Item Name="boolean" Condition="t == 1">b</Item>
+      <Item Name="float" Condition="t == 2">dbl</Item>
+      <Item Name="string" Condition="t == 3">stringData</Item>
+      <Item Name="array" Condition="t == 4">(Qt5Cored.dll!QJsonPrivate::Array *)(base)</Item>
+      <Item Name="object" Condition="t == 5">(Qt5Cored.dll!QJsonPrivate::Object *)(base)</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="Qt5Cored.dll!QJsonPrivate::qle_bitfield&lt;*,*&gt;">
+    <AlternativeType Name="QJsonPrivate::qle_bitfield&lt;*,*&gt;"/>
+    <AlternativeType Name="Qt5Cored.dll!QJsonPrivate::qle_signedbitfield&lt;*,*&gt;"/>
+    <AlternativeType Name="QJsonPrivate::qle_signedbitfield&lt;*,*&gt;"/>
+    <DisplayString>{(val &gt;&gt; $T1) &amp; ((1 &lt;&lt; $T2) - 1)} </DisplayString>
+    <Expand>
+      <Item Name="value">(val &gt;&gt; $T1) &amp; ((1 &lt;&lt; $T2) - 1)</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="Qt5Cored.dll!QJsonPrivate::q_littleendian&lt;*&gt;">
+    <AlternativeType Name="QJsonPrivate::q_littleendian&lt;*&gt;"/>
+    <DisplayString>{val}</DisplayString>
+  </Type>
+
+  <Type Name="Qt5Cored.dll!QJsonPrivate::Object">
+    <AlternativeType Name="QJsonPrivate::Object"/>
+    <Expand>
+      <CustomListItems>
+        <Variable Name="i" InitialValue="0"/>
+        <Variable Name="base" InitialValue="(Qt5Cored.dll!QJsonPrivate::Base*)this"/>
+        <!--<Variable Name="isobj" InitialValue="!!(base->is_object.val &amp; 1)"/>-->
+        <Variable Name="n" InitialValue="uint(base->length.val >> 1)"/>
+        <Variable Name="of" InitialValue="(uint*)(Qt5Cored.dll!QJsonPrivate::offset *) (((char *) this) + base->tableOffset.val)"/>
+        <Variable Name="entry" InitialValue="(char *)0"/>
+        <Variable Name="stringdata" InitialValue="(char*)0"/>
+        <Variable Name="key" InitialValue="(char*)0"/>
+        <Loop Condition="n &lt; 10000">
+          <If Condition="i &gt;= n">
+            <Break/>
+          </If>
+          <Exec>entry=((char *)this + of[i])</Exec>
+          <Exec>stringdata=(entry + sizeof(Qt5Cored.dll!QJsonPrivate::Entry))</Exec>
+          <If Condition="(((Qt5Cored.dll!QJsonPrivate::Entry*)entry)->value.latinKey.val >> 4) &amp; 1">
+            <Exec>key=((Qt5Cored.dll!Latin1String::Data*)stringdata)->latin1</Exec>
+            <Item Name="[{key,[((Qt5Cored.dll!Latin1String::Data*)stringdata)->length.val] sb}]" Condition="key">((Qt5Cored.dll!QJsonPrivate::Entry*)entry)->value</Item>
+          </If>
+          <Else>
+            <Exec>key=(char*)((Qt5Cored.dll!String::Data*)stringdata)->utf16</Exec>
+            <Item Name="[{(ushort*)key,[((Qt5Cored.dll!String::Data*)stringdata)->length.val] sub}]" Condition="key">((Qt5Cored.dll!QJsonPrivate::Entry*)entry)->value</Item>
+          </Else>
+          <Exec>i++</Exec>
+        </Loop>
+      </CustomListItems>
+    </Expand>
+  </Type>
+
+  <Type Name="Qt5Cored.dll!QJsonPrivate::Array">
+    <AlternativeType Name="QJsonPrivate::Array"/>
+    <Expand>
+      <CustomListItems>
+        <Variable Name="i" InitialValue="0"/>
+        <Variable Name="base" InitialValue="(char*)this"/>
+        <Variable Name="n" InitialValue="((Qt5Cored.dll!QJsonPrivate::Base*)base)->length.val >> 1"/>
+        <Variable Name="of" InitialValue="(Qt5Cored.dll!QJsonPrivate::offset *) (base + ((Qt5Cored.dll!QJsonPrivate::Base*)base)->tableOffset.val)"/>
+
+        <Variable Name="jval" InitialValue="(void *)0"/>
+        <Variable Name="typ" InitialValue="0"/>
+        <Variable Name="lat" InitialValue="0"/>
+        <Variable Name="val" InitialValue="0"/>
+        <Variable Name="pk" InitialValue="(char *)0"/>
+
+        <Loop>
+          <If Condition="i &gt;= n">
+            <Break/>
+          </If>
+          <Exec>jval = reinterpret_cast&lt;void*&gt;(of + i)</Exec>
+          <Exec>typ = ((Qt5Cored.dll!QJsonPrivate::Value *)jval)->type.val &amp; 7</Exec>
+          <Exec>lat = !!((((Qt5Cored.dll!QJsonPrivate::Value *)jval)->latinOrIntValue.val >> 3) &amp; 1)</Exec>
+          <Exec>val = ((Qt5Cored.dll!QJsonPrivate::Value *)jval)->value.val >> 5</Exec>
+          <Exec>pk = base + val</Exec>
+
+          <Item Name="[{i,d}], null" Condition="typ == 0">nullptr</Item>
+          <Item Name="[{i,d}], boolean" Condition="typ == 1">val != 0</Item>
+          <Item Name="[{i,d}], float" Condition="typ == 2 &amp;&amp; lat">(double)(val)</Item>
+          <Item Name="[{i,d}], float" Condition="typ == 2 &amp;&amp; !lat">*(double*)(pk) </Item>
+          <Item Name="[{i,d}], string" Condition="typ == 3 &amp;&amp; lat">*(Qt5Cored.dll!QJsonPrivate::Latin1String::Data*)(pk)</Item>
+          <Item Name="[{i,d}], string" Condition="typ == 3 &amp;&amp; !lat">*(Qt5Cored.dll!QJsonPrivate::String::Data*)(pk) </Item>
+          <Item Name="[{i,d}], array" Condition="typ == 4">*(Qt5Cored.dll!QJsonPrivate::Array*)(pk)</Item>
+          <Item Name="[{i,d}], object" Condition="typ == 5">*(Qt5Cored.dll!QJsonPrivate::Object*)(pk)</Item>
+
+          <Exec>i++</Exec>
+        </Loop>
+      </CustomListItems>
+    </Expand>
+  </Type>
+
+  <Type Name="Qt5Cored.dll!QJsonPrivate::Latin1String::Data">
+    <AlternativeType Name="QJsonPrivate::Latin1String::Data"/>
+    <DisplayString>{latin1, [length.val] s8} </DisplayString>
+  </Type>
+
+  <Type Name="Qt5Cored.dll!QJsonPrivate::String::Data">
+    <AlternativeType Name="QJsonPrivate::String::Data"/>
+    <DisplayString>{utf16, [length.val] su}</DisplayString>
+  </Type>
+
+  <Type Name="Qt5Cored.dll!QJsonPrivate::Entry">
+    <AlternativeType Name="QJsonPrivate::Entry"/>
+    <Expand>
+      <Item Name="Value">value</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="Qt5Cored.dll!QJsonPrivate::Value">
+    <AlternativeType Name="QJsonPrivate::Value"/>
+    <Expand>
+      <CustomListItems>
+        <Variable Name="typ" InitialValue="(type.val &amp; 7)"/>
+        <Variable Name="lat" InitialValue="!!((latinOrIntValue.val >> 3) &amp; 1)"/>
+        <Variable Name="pk" InitialValue="(char *)(1 + this)"/>
+        <Variable Name="i" InitialValue="((latinKey.val >> 4) &amp; 1) == 0 ? sizeof(short) * ((String::Data*)pk)->length.val : ((Latin1String::Data*)pk)->length.val"/>
+
+        <!--<Item Name="Key" Condition="((latinKey.val >> 4) &amp; 1) == 0">*(String::Data*)pk</Item>-->
+        <!--<Item Name="Key" Condition="((latinKey.val >> 4) &amp; 1) == 1">*(Latin1String::Data*)pk</Item>-->
+
+        <Exec>pk += (sizeof(ushort) + i + 3) &amp; ~3</Exec>
+
+        <Item Name="null" Condition="typ == 0">nullptr</Item>
+        <Item Name="boolean" Condition="typ == 1">int_value.val != 0</Item>
+        <Item Name="float" Condition="typ == 2 &amp;&amp; lat">(double)(int_value.val >> 5)</Item>
+        <Item Name="float" Condition="typ == 2 &amp;&amp; !lat">*(double*)(pk) </Item>
+        <Item Name="string" Condition="typ == 3 &amp;&amp; lat">*(QJsonPrivate::Latin1String::Data*)(pk)</Item>
+        <Item Name="string" Condition="typ == 3 &amp;&amp; !lat">*(QJsonPrivate::String::Data*)(pk) </Item>
+        <Item Name="array" Condition="typ == 4">(Qt5Cored.dll!QJsonPrivate::Array*)(pk)</Item>
+        <Item Name="object" Condition="typ == 5">(Qt5Cored.dll!QJsonPrivate::Object*)(pk)</Item>
+
+        <!--<Item Name="type">typ</Item>-->
+
+      </CustomListItems>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>

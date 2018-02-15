@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <Type Name="QSharedPointer&lt;*&gt;">
+    <AlternativeType Name="QSharedDataPointer&lt;*&gt;" />
+    <SmartPointer Usage="Full">($T1*)d</SmartPointer>
+    <DisplayString Condition="!value">null, weak:{d->weakref._q_value}, strong:{d->strongref._q_value}</DisplayString>
+    <DisplayString Condition="value">weak:{d->weakref._q_value}, strong:{d->strongref._q_value}, {{{value}}}</DisplayString>
+    <Expand>
+      <Item Name="value" Condition="value">*value</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="QDir">
+    <SmartPointer Usage="Full">(QSharedDataPointer&lt;Qt5Cored.dll!QDirPrivate&gt;)d_ptr</SmartPointer>
+  </Type>
+</AutoVisualizer>

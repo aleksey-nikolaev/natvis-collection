@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" MenuName="Add to Image Watch" />
+
+  <!-- Poppler -->
+
+  <Type Name="SplashOutputDevice::ImageData">
+    <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
+  </Type>
+
+  <Type Name="SplashOutputDevice::ImageData">
+    <DisplayString>{{{bitsPerChannel} x {width} x {height}}}</DisplayString>
+    <Expand>
+      <Synthetic Name="[type]" Condition="bitsPerChannel&lt;=8">
+        <DisplayString>UINT8</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[channels]">
+        <DisplayString Condition="channels==3">RGB</DisplayString>
+        <DisplayString>{channels}</DisplayString>
+      </Synthetic>
+      <Item Name="[width]" Condition="bitsPerChannel==8">width</Item>
+      <Item Name="[width]" Condition="bitsPerChannel&lt;8">(width * bitsPerChannel + 7) / 8</Item>
+      <Item Name="[height]">height</Item>
+      <Item Name="[data]">&amp;data[0]</Item>
+      <Item Name="[stride]">rowSize</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="SplashBitmap">
+    <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
+  </Type>
+
+  <Type Name="SplashBitmap">
+    <DisplayString>{{{mode} x {width} x {height}}}</DisplayString>
+    <Expand>
+      <Synthetic Name="[type]">
+        <DisplayString>UINT8</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[channels]">
+        <DisplayString Condition="mode==SplashColorMode::splashModeMono8">1</DisplayString>
+        <DisplayString Condition="mode==SplashColorMode::splashModeRGB8">RGB</DisplayString>
+        <DisplayString Condition="mode==SplashColorMode::splashModeBGR8">BGR</DisplayString>
+        <DisplayString Condition="mode==SplashColorMode::splashModeXBGR8">BGRA</DisplayString>
+        <DisplayString Condition="mode==SplashColorMode::splashModeCMYK8">BGRA</DisplayString>
+        <DisplayString Condition="mode==SplashColorMode::splashModeDeviceN8">8</DisplayString>
+        <DisplayString>1</DisplayString>
+      </Synthetic>
+      <Item Name="[width]">width</Item>
+      <Item Name="[height]">height</Item>
+      <Item Name="[data]">data</Item>
+      <Item Name="[stride]">rowSize</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="SplashGlyphBitmap">
+    <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
+  </Type>
+
+  <Type Name="SplashGlyphBitmap">
+    <DisplayString>{{({x}, {y}) {w} x {h}}}</DisplayString>
+    <Expand>
+      <Synthetic Name="[type]">
+        <DisplayString>UINT8</DisplayString>
+      </Synthetic>
+      <Item Name="[channels]">1</Item>
+      <Item Name="[width]">(w+7)/8</Item>
+      <Item Name="[height]">h</Item>
+      <Item Name="[data]">data</Item>
+      <Item Name="[stride]">(w+7)/8</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="SplashPath">
+    <DisplayString Condition="curSubpath==length">{{{length,d} points, no Current Point}}</DisplayString>
+    <DisplayString>{{{length,d} points, start at {curSubpath}}}</DisplayString>
+    <Expand>
+      <Item Name="points">pts, [length]</Item>
+      <Item Name="flags">flags, [length] b</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="GfxPath">
+    <!--GBool justMoved;		// set if a new subpath was just started
+        double firstX, firstY;	// first point in new subpath
+        GfxSubpath **subpaths;	// subpaths
+        int n;			// number of subpaths
+        int size;			// size of subpaths array-->
+    <DisplayString Condition="justMoved">{{{n} subpath, new subpath was just started ({firstX}, {firstY})}}</DisplayString>
+    <DisplayString>{{{n} subpath, first point in new subpath ({firstX}, {firstY})}}</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>n</Size>
+        <ValuePointer>(GfxSubpath **)subpaths</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <Type Name="SplashXPathSeg">
+    <DisplayString>{{{flags,d} [({x0,g}, {y0,g}) ({x1,g}, {y1,g})] [{dxdy,g},{dydx,g}]}}</DisplayString>
+  </Type>
+
+  <Type Name="SplashXPath">
+    <DisplayString>{{{length,d} segments}}</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>length</Size>
+        <ValuePointer>segs</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <Type Name="GfxSubpath">
+    <!--double *x, *y;		// points
+        GBool *curve; // control point i for a Bezier curve(use 3 point true true false) else false
+        int n;			// number of points
+        int size;			// size of x/y arrays
+        GBool closed;			// set if path is closed-->
+    <DisplayString Condition="closed">{{{n} points path is closed}}</DisplayString>
+    <DisplayString>{{{n} points}}</DisplayString>
+    <Expand>
+      <CustomListItems>
+        <Variable Name="i" InitialValue="0" />
+        <Loop>
+          <If Condition="i &gt;= n">
+            <Break />
+          </If>
+          <Item Name="[x {i}]">x[i]</Item>
+          <Item Name="[y {i}]">y[i]</Item>
+          <Item Name="[curve {i}]">curve[i]</Item>
+          <Exec>i++</Exec>
+        </Loop>
+      </CustomListItems>
+    </Expand>
+  </Type>
+
+  <Type Name="poppler::StateSave">
+    <DisplayString>StateSave</DisplayString>
+  </Type>
+  <Type Name="poppler::StateRestore">
+    <DisplayString>StateRestore</DisplayString>
+  </Type>
+  <Type Name="poppler::TextStart">
+    <DisplayString>TextStart</DisplayString>
+  </Type>
+  <Type Name="poppler::TextStop">
+    <DisplayString>TextStop</DisplayString>
+  </Type>
+  <Type Name="poppler::GlyphDraw">
+    <DisplayString Condition="clip">GlyphDraw clip "{&amp;unicode,sub}"</DisplayString>
+    <DisplayString>GlyphDraw "{&amp;unicode,sub}"</DisplayString>
+  </Type>
+  <Type Name="poppler::ContourDraw">
+    <DisplayString>ContourDraw [{contourData->points}]</DisplayString>
+  </Type>
+  <Type Name="poppler::ImageDraw">
+    <DisplayString>ImageDraw</DisplayString>
+  </Type>
+  <Type Name="poppler::page_renderer::SplashBitmapResult">
+    <DisplayString>SplashBitmapResult</DisplayString>
+  </Type>
+  <Type Name="SplashBitmap">
+    <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
+  </Type>
+
+  <Type Name="poppler::ImageData">
+    <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
+  </Type>
+  <Type Name="poppler::ImageData">
+    <DisplayString>{{{format} x {width} x {height}}}</DisplayString>
+    <Expand>
+      <Synthetic Name="[type]">
+        <DisplayString>UINT8</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[channels]">
+        <DisplayString Condition="channels==1">1</DisplayString>
+        <DisplayString Condition="channels==3">RGB</DisplayString>
+        <DisplayString Condition="channels==4">RGBA</DisplayString>
+        <DisplayString Condition="format==Color::DeviceCMYK">RGBA</DisplayString>
+        <DisplayString>{channels}</DisplayString>
+      </Synthetic>
+      <Item Name="[width]">rowSize/channels</Item>
+      <Item Name="[height]">height</Item>
+      <Item Name="[data]">&amp;data[0]</Item>
+      <Item Name="[stride]">rowSize</Item>
+    </Expand>
+  </Type>
+</AutoVisualizer>

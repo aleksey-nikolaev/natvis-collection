@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" MenuName="Add to Image Watch" />
+
+  <Type Name="QImageData">
+    <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
+  </Type>
+
+  <Type Name="QImageData">
+    <!--<AlternativeType Name="Qt5Guid.dll!QImageData" />-->
+    <Expand>
+      <Synthetic Name="[type]">
+        <DisplayString>UINT8</DisplayString>
+      </Synthetic>
+
+      <Synthetic Name="[channels]">
+        <DisplayString Condition="(*(int*)(((char*)this)+48))==4">BGRA</DisplayString>
+        <DisplayString Condition="(*(int*)(((char*)this)+48))==5">BGRA</DisplayString>
+        <DisplayString Condition="(*(int*)(((char*)this)+48))==6">BGRA</DisplayString>
+        <DisplayString Condition="(*(int*)(((char*)this)+48))==13">RGB</DisplayString>
+        <DisplayString Condition="(*(int*)(((char*)this)+48))==16">RGBA</DisplayString>
+        <DisplayString Condition="(*(int*)(((char*)this)+48))==17">RGBA</DisplayString>
+        <DisplayString Condition="(*(int*)(((char*)this)+48))==18">RGBA</DisplayString>
+        <DisplayString>1</DisplayString>
+      </Synthetic>
+
+      <Item Name="[width]">((Qt5Guid.dll!QImageData*)this)->width</Item>
+      <Item Name="[height]">((Qt5Guid.dll!QImageData*)this)->height</Item>
+      <Item Name="[data]">((Qt5Guid.dll!QImageData*)this)->data</Item>
+      <Item Name="[stride]">((Qt5Guid.dll!QImageData*)this)->bytes_per_line</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="QImage">
+    <AlternativeType Name="Qt5Guid.dll!QImage" />
+    <SmartPointer Usage="Full">(Qt5Guid.dll!QImageData*)d</SmartPointer>
+  </Type>
+</AutoVisualizer>

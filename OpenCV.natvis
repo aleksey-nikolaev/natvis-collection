@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <!--<UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" MenuName="Add to Image Watch" />
+  <Type Name="cv::_InputArray">
+    <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
+  </Type>-->
+  <Type Name="cv::_InputArray">
+    <AlternativeType Name="cv::debug_build_guard::_InputArray" />
+    <AlternativeType Name="_InputArray" />
+    <AlternativeType Name="InputArray" />
+    <AlternativeType Name="cv::debug_build_guard::_OutputArray" />
+    <AlternativeType Name="cv::_OutputArray" />
+    <AlternativeType Name="_OutputArray" />
+    <AlternativeType Name="OutputArray" />
+
+    <DisplayString Condition="(flags &amp; KIND_MASK) == MAT">Mat {(cv::Mat*)obj}</DisplayString>
+    <DisplayString Condition="(flags &amp; KIND_MASK) == UMAT">UMat {(cv::UMat*)obj}</DisplayString>
+    <DisplayString Condition="(flags &amp; KIND_MASK) == EXPR">MatExpr {(cv::MatExpr*)obj}</DisplayString>
+    <DisplayString Condition="(flags &amp; KIND_MASK) == MATX">MATX { (cv::Scalar*)obj,na }</DisplayString>
+    <DisplayString>Other { obj }</DisplayString>
+
+    <Expand>
+      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == MAT">(cv::Mat*)obj</Item>
+      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == UMAT">(cv::UMat*)obj</Item>
+      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == EXPR">(cv::MatExpr*)obj</Item>
+      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == MATX">(cv::Scalar*)obj,na</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="cv::Vec&lt;*,*&gt;">
+    <DisplayString ExcludeView="string">{{{val,[$T2]nag}}}</DisplayString>
+  </Type>
+  <!--<Type Name="cv::Vec&lt;*&gt;">
+    <DisplayString>{{{val,na}}}</DisplayString>
+  </Type>-->
+  <Type Name="cv::Scalar_&lt;*&gt;">
+    <DisplayString>{{{val,[4]g}}}</DisplayString>
+  </Type>
+  <Type Name="cv::Rect_&lt;*&gt;">
+    <DisplayString>{{x={x,g}, y={y,g}, width={width,g}, height={height,g}}}</DisplayString>
+  </Type>
+</AutoVisualizer>
