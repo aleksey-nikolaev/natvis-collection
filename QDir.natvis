@@ -1,17 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
 
-  <Type Name="QSharedPointer&lt;*&gt;">
-    <AlternativeType Name="QSharedDataPointer&lt;*&gt;" />
-    <SmartPointer Usage="Full">($T1*)d</SmartPointer>
-    <DisplayString Condition="!value">null, weak:{d->weakref._q_value}, strong:{d->strongref._q_value}</DisplayString>
-    <DisplayString Condition="value">weak:{d->weakref._q_value}, strong:{d->strongref._q_value}, {{{value}}}</DisplayString>
+  <Type Name="QDir">
+    <DisplayString>{*(Qt5Cored.dll!QDirPrivate*)(d_ptr.d)}</DisplayString>
     <Expand>
-      <Item Name="value" Condition="value">*value</Item>
+      <ExpandedItem>(Qt5Cored.dll!QDirPrivate*)(d_ptr.d)</ExpandedItem>
+    </Expand>
+  </Type>
+  
+  <Type Name="QDirPrivate">
+    <DisplayString ModuleName="Qt5Cored.dll" Condition="absoluteDirEntry.m_filePath.d-&gt;size">{dirEntry.m_filePath} + {absoluteDirEntry.m_filePath}</DisplayString>
+    <DisplayString ModuleName="Qt5Cored.dll">{dirEntry.m_filePath}</DisplayString>
+  </Type>
+  
+  <Type Name="QFileInfo">
+    <DisplayString>{*(Qt5Cored.dll!QFileInfoPrivate*)(d_ptr.d)}</DisplayString>
+    <Expand>
+      <ExpandedItem>(Qt5Cored.dll!QFileInfoPrivate*)(d_ptr.d)</ExpandedItem>
+    </Expand>
+  </Type>
+  
+  <Type Name="QFileInfoPrivate">
+    <DisplayString ModuleName="Qt5Cored.dll">{fileEntry.m_filePath}</DisplayString>
+  </Type>
+  
+  <Type Name="QFile">
+    <DisplayString>{*(Qt5Cored.dll!QFilePrivate*)(d_ptr.d)}</DisplayString>
+    <Expand>
+      <ExpandedItem>(Qt5Cored.dll!QFilePrivate*)(d_ptr.d)</ExpandedItem>
+    </Expand>
+  </Type>
+  
+  <Type Name="QFilePrivate">
+    <DisplayString ModuleName="Qt5Cored.dll">{fileName}</DisplayString>
+  </Type>
+  
+  <Type Name="ProString">
+    <AlternativeType Name="ProKey" />
+    <DisplayString>{(char*)(&amp;m_string[m_offset]),[m_length]sub}</DisplayString>
+    <Expand>
     </Expand>
   </Type>
 
-  <Type Name="QDir">
-    <SmartPointer Usage="Full">(QSharedDataPointer&lt;Qt5Cored.dll!QDirPrivate&gt;)d_ptr</SmartPointer>
+  <Type Name="XmlOutput">
+    <DisplayString>{xmlFile.d_ptr.d->device->d_ptr.d->writeBuffer.m_buf->buffers[0].chunk,[xmlFile.d_ptr.d->device->d_ptr.d->writeBuffer.m_buf->bufferSize]}{xmlFile.d_ptr.d->writeBuffer}</DisplayString>
+    <Expand>
+      <ExpandedItem>xmlFile</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <Type Name="QTextStream">
+    <DisplayString>{d_ptr.d->device->d_ptr.d->writeBuffer.m_buf->buffers[0].chunk,[d_ptr.d->device->d_ptr.d->writeBuffer.m_buf->bufferSize]}{d_ptr.d->writeBuffer}</DisplayString>
+    <Expand>
+      <Item Name="a">d_ptr.d->device->d_ptr.d->writeBuffer.m_buf->buffers[0].chunk,[d_ptr.d->device->d_ptr.d->writeBuffer.m_buf->bufferSize]</Item>
+      <Item Name="b">d_ptr.d->writeBuffer</Item>
+    </Expand>
   </Type>
 </AutoVisualizer>

@@ -14,17 +14,19 @@
     <AlternativeType Name="_OutputArray" />
     <AlternativeType Name="OutputArray" />
 
-    <DisplayString Condition="(flags &amp; KIND_MASK) == MAT">Mat {(cv::Mat*)obj}</DisplayString>
-    <DisplayString Condition="(flags &amp; KIND_MASK) == UMAT">UMat {(cv::UMat*)obj}</DisplayString>
-    <DisplayString Condition="(flags &amp; KIND_MASK) == EXPR">MatExpr {(cv::MatExpr*)obj}</DisplayString>
-    <DisplayString Condition="(flags &amp; KIND_MASK) == MATX">MATX { (cv::Scalar*)obj,na }</DisplayString>
-    <DisplayString>Other { obj }</DisplayString>
+    <DisplayString Condition="!obj" Optional="true">null</DisplayString>
+    <DisplayString Condition="(flags &amp; KIND_MASK) == MAT" Optional="true">Mat {(cv::Mat*)obj}</DisplayString>
+    <DisplayString Condition="(flags &amp; KIND_MASK) == UMAT" Optional="true">UMat {(cv::UMat*)obj}</DisplayString>
+    <DisplayString Condition="(flags &amp; KIND_MASK) == EXPR" Optional="true">MatExpr {(cv::MatExpr*)obj}</DisplayString>
+    <DisplayString Condition="(flags &amp; KIND_MASK) == MATX" Optional="true">MATX { (cv::Scalar*)obj,na }</DisplayString>
+    <DisplayString>None</DisplayString>
 
     <Expand>
-      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == MAT">(cv::Mat*)obj</Item>
-      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == UMAT">(cv::UMat*)obj</Item>
-      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == EXPR">(cv::MatExpr*)obj</Item>
-      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == MATX">(cv::Scalar*)obj,na</Item>
+      <Item Name = "data" Condition="!obj" Optional="true">obj</Item>
+      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == MAT" Optional="true">(cv::Mat*)obj</Item>
+      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == UMAT" Optional="true">(cv::UMat*)obj</Item>
+      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == EXPR" Optional="true">(cv::MatExpr*)obj</Item>
+      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == MATX" Optional="true">(cv::Scalar*)obj,na</Item>
     </Expand>
   </Type>
 

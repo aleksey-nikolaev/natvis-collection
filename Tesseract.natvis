@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <!-- Tesseract -->
+
+  <Type Name="STRING">
+    <DisplayString Condition="((STRING_HEADER*)data_)->used_ == 0">null</DisplayString>
+    <DisplayString>{{{((const char *)data_) + sizeof(STRING_HEADER),[((STRING_HEADER*)data_)->used_]s}}}</DisplayString>
+    <Expand>
+      <Item Name="[capacity]">((STRING_HEADER*)data_)->capacity_</Item>
+      <Item Name="[used]">((STRING_HEADER*)data_)->used_</Item>
+      <Item Name="[data]">((const char *)data_) + sizeof(STRING_HEADER),[((STRING_HEADER*)data_)->used_]s</Item>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>
