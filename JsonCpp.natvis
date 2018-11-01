@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <Type Name="std::map&lt;*&gt;" IncludeView="jsoncpp">
+    <Expand>
+      <TreeItems>
+        <Size>_Mypair._Myval2._Myval2._Mysize</Size>
+        <HeadPointer>_Mypair._Myval2._Myval2._Myhead-&gt;_Parent</HeadPointer>
+        <LeftPointer>_Left</LeftPointer>
+        <RightPointer>_Right</RightPointer>
+        <ValueNode Condition="_Isnil == 0" Name="[{_Myval.second.type_,view(jsoncpp)}]">_Myval,view(jsoncpp)</ValueNode>
+      </TreeItems>
+    </Expand>
+  </Type>
+
+  <Type Name="std::pair&lt;Json::Value::CZString const ,Json::Value&gt;">
+    <DisplayString Condition="first.cstr_ != nullptr">{first.cstr_,s8}: {second}</DisplayString>
+    <DisplayString>{second}</DisplayString>
+    <Expand>
+      <Item Name="key" Condition="!(second.type_ == 6 || second.type_ == 7) &amp;&amp; first.cstr_ != nullptr">first.cstr_,s8</Item>
+      <Item Name="value" Condition="!(second.type_ == 6 || second.type_ == 7)">second</Item>
+      <ExpandedItem Condition="second.type_ == 6 || second.type_ == 7">*(second.value_.map_),view(jsoncpp)</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <Type Name="Json::Value::CZString">
+    <DisplayString>{cstr_,s8}</DisplayString>
+  </Type>
+
+  <Type Name="Json::Value">
+    <DisplayString Condition="type_ == 0">null</DisplayString>
+    <DisplayString Condition="type_ == 1">{value_.int_}</DisplayString>
+    <DisplayString Condition="type_ == 2">{value_.uint_}</DisplayString>
+    <DisplayString Condition="type_ == 3">{value_.real_}</DisplayString>
+    
+    <DisplayString Condition="type_ == 4 &amp;&amp; allocated_ == 1">{value_.string_ + sizeof(unsigned),s8}</DisplayString>
+    <DisplayString Condition="type_ == 4">{value_.string_,s8}</DisplayString>
+    
+    <DisplayString Condition="type_ == 5">{value_.bool_}</DisplayString>
+    <DisplayString Condition="type_ == 6">array ({value_.map_-&gt;_Mypair._Myval2._Myval2._Mysize})</DisplayString>
+    <DisplayString Condition="type_ == 7">object ({value_.map_-&gt;_Mypair._Myval2._Myval2._Mysize})</DisplayString>
+    <DisplayString >Unknown Value type!</DisplayString>
+    
+    <StringView Condition="type_ == 4 &amp;&amp; allocated_ == 1">value_.string_ + sizeof(unsigned),s8</StringView>
+    <StringView Condition="type_ == 4">value_.string_,s8</StringView>
+
+    <Expand>
+      <ExpandedItem Condition="type_ == 6 || type_ == 7">*(value_.map_),view(jsoncpp)</ExpandedItem>
+    </Expand>
+  </Type>
+</AutoVisualizer>
