@@ -7,34 +7,38 @@
       <ExpandedItem>(Qt5Cored.dll!QDirPrivate*)(d_ptr.d)</ExpandedItem>
     </Expand>
   </Type>
-  
+
   <Type Name="QDirPrivate">
-    <DisplayString ModuleName="Qt5Cored.dll" Condition="absoluteDirEntry.m_filePath.d-&gt;size">{dirEntry.m_filePath} + {absoluteDirEntry.m_filePath}</DisplayString>
+    <DisplayString ModuleName="Qt5Cored.dll" Condition="absoluteDirEntry.m_filePath.d-&gt;size">{absoluteDirEntry.m_filePath}</DisplayString>
     <DisplayString ModuleName="Qt5Cored.dll">{dirEntry.m_filePath}</DisplayString>
   </Type>
-  
+
+  <Type Name="QFileSystemEntry">
+    <DisplayString ModuleName="Qt5Cored.dll">{m_filePath}</DisplayString>
+  </Type>
+
   <Type Name="QFileInfo">
     <DisplayString>{*(Qt5Cored.dll!QFileInfoPrivate*)(d_ptr.d)}</DisplayString>
     <Expand>
       <ExpandedItem>(Qt5Cored.dll!QFileInfoPrivate*)(d_ptr.d)</ExpandedItem>
     </Expand>
   </Type>
-  
+
   <Type Name="QFileInfoPrivate">
     <DisplayString ModuleName="Qt5Cored.dll">{fileEntry.m_filePath}</DisplayString>
   </Type>
-  
+
   <Type Name="QFile">
     <DisplayString>{*(Qt5Cored.dll!QFilePrivate*)(d_ptr.d)}</DisplayString>
     <Expand>
       <ExpandedItem>(Qt5Cored.dll!QFilePrivate*)(d_ptr.d)</ExpandedItem>
     </Expand>
   </Type>
-  
+
   <Type Name="QFilePrivate">
     <DisplayString ModuleName="Qt5Cored.dll">{fileName}</DisplayString>
   </Type>
-  
+
   <Type Name="ProString">
     <AlternativeType Name="ProKey" />
     <DisplayString>{(char*)(&amp;m_string[m_offset]),[m_length]sub}</DisplayString>
@@ -56,4 +60,5 @@
       <Item Name="b">d_ptr.d->writeBuffer</Item>
     </Expand>
   </Type>
+
 </AutoVisualizer>

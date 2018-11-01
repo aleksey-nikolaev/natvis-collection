@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <Type Name="QMutex">
+    <DisplayString Condition="d_ptr._q_value._My_val == 0">unlocked</DisplayString>
+    <DisplayString Condition="d_ptr._q_value._My_val != 0">locked {{{d_ptr._q_value._My_val}}}</DisplayString>
+    <Expand>
+      <Item Name="[count]">d_ptr._q_value._My_val</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="QMutexLocker">
+    <DisplayString Condition="val &amp; quintptr(1u)">locked</DisplayString>
+    <DisplayString>unlocked</DisplayString>
+    <Expand>
+      <ExpandedItem>*(QMutex *)(val &amp; ~quintptr(1u))</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <Type Name="QReadWriteLock">
+    <DisplayString Condition="d_ptr._q_value._My_val == 2">WriteLock</DisplayString>
+    <DisplayString Condition="d_ptr._q_value._My_val == 1">ReadLock</DisplayString>
+    <DisplayString Condition="d_ptr._q_value._My_val == 3">ReadWriteLock</DisplayString>
+    <DisplayString>unlocked</DisplayString>
+  </Type>
+
+</AutoVisualizer>

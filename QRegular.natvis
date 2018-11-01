@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <Type Name="QRegularExpression">
+    <DisplayString>{*(Qt5Cored.dll!QRegularExpressionPrivate*)(d.d)}</DisplayString>
+    <Expand>
+      <ExpandedItem>*(Qt5Cored.dll!QRegularExpressionPrivate*)(d.d)</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <Type Name="QRegularExpressionPrivate">
+    <DisplayString ModuleName="Qt5Cored.dll">{pattern}</DisplayString>
+  </Type>
+
+  <Type Name="QRegularExpressionMatch">
+    <DisplayString>{*(Qt5Cored.dll!QRegularExpressionMatchPrivate*)(d.d)}</DisplayString>
+    <Expand>
+      <ExpandedItem>*(Qt5Cored.dll!QRegularExpressionMatchPrivate*)(d.d)</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <Type Name="QRegularExpressionMatchPrivate">
+    <DisplayString ModuleName="Qt5Cored.dll">{matchType}</DisplayString>
+    <Expand>
+      <IndexListItems Condition="hasMatch">
+        <Size>capturedCount</Size>
+        <ValueNode>&amp;subject[capturedOffsets[$i*2]],[capturedOffsets[$i*2+1]-capturedOffsets[$i*2]]sub</ValueNode>
+      </IndexListItems>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>
