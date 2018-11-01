@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <Type Name="QCameraInfo">
+    <DisplayString>{*(Qt5Multimediad.dll!QCameraInfoPrivate*)(d.value)}</DisplayString>
+    <Expand>
+      <ExpandedItem>*(Qt5Multimediad.dll!QCameraInfoPrivate*)(d.value)</ExpandedItem>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>
