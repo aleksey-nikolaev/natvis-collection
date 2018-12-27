@@ -331,13 +331,13 @@ Motivation: I'm not use this add-in and original file didn't work as expected
   </Type>
 
   <Type Name="QSharedPointer&lt;*&gt;">
-    <!--strong reference to shared pointer of type {"$T1"} -->
     <DisplayString Condition="!value">null</DisplayString>
     <DisplayString>{*value}</DisplayString>
     <Expand>
       <Item Name="[value]" Condition="value">*value</Item>
-      <Item Name="[weak referenced]">d-&gt;weakref._q_value</Item>
-      <Item Name="[strong referenced]">d-&gt;strongref._q_value</Item>
+      <Synthetic Name="[reference]">
+        <DisplayString>{{strong = {d-&gt;strongref._q_value}, weak = {d-&gt;weakref._q_value}}}</DisplayString>
+      </Synthetic>
     </Expand>
   </Type>
 
@@ -368,8 +368,9 @@ Motivation: I'm not use this add-in and original file didn't work as expected
     <DisplayString>{*value}</DisplayString>
     <Expand>
       <Item Name="[value]" Condition="d &amp;&amp; value">*value</Item>
-      <Item Name="[weak referenced]">d-&gt;weakref._q_value</Item>
-      <Item Name="[strong referenced]">d-&gt;strongref._q_value</Item>
+      <Synthetic Name="[reference]">
+        <DisplayString>{{strong = {d-&gt;strongref._q_value}, weak = {d-&gt;weakref._q_value}}}</DisplayString>
+      </Synthetic>
     </Expand>
   </Type>
 
