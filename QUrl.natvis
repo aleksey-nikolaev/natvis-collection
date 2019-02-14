@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <Type Name="QUrl">
+    <DisplayString Condition="d">{*(Qt5Cored.dll!QUrlPrivate*)(d)}</DisplayString>
+    <DisplayString>null</DisplayString>
+    <Expand>
+      <ExpandedItem Condition="d">(Qt5Cored.dll!QUrlPrivate*)(d)</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <Type Name="QUrlPrivate">
+    <DisplayString ModuleName="Qt5Cored.dll"
+                   Condition="sectionIsPresent == 0 &amp;&amp; port == -1 &amp;&amp; !path.d-&gt;size">
+      empty
+    </DisplayString>
+    <DisplayString ModuleName="Qt5Cored.dll" Condition="port &lt; 0 &amp;&amp; query.d-&gt;size">
+      {scheme}://{host}{path}?{query}
+    </DisplayString>
+    <DisplayString ModuleName="Qt5Cored.dll" Condition="port &lt; 0 &amp;&amp; !query.d-&gt;size">
+      {scheme}://{host}{path}
+    </DisplayString>
+    <DisplayString ModuleName="Qt5Cored.dll" Condition="port &gt;= 0 &amp;&amp; query.d-&gt;size">
+      {scheme}://{host}:{port}{path}?{query}
+    </DisplayString>
+    <DisplayString ModuleName="Qt5Cored.dll" Condition="port &gt;= 0 &amp;&amp; !query.d-&gt;size">
+      {scheme}://{host}:{port}{path}
+    </DisplayString>
+    <DisplayString ModuleName="Qt5Cored.dll">{scheme}://{host}{path}</DisplayString>
+  </Type>
+
+</AutoVisualizer>
