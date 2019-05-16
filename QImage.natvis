@@ -8,32 +8,33 @@
   </Type>
 
   <Type Name="QImageData">
-    <!--<AlternativeType Name="Qt5Guid.dll!QImageData" />-->
+    <Intrinsic Name="_this" Expression="((Qt5Guid.dll!QImageData*)this)"/>
+    <Intrinsic Name="_tmp" Expression="(int)_this()->format"/>
+    <Intrinsic Name="colorSpace" Expression="(
+               (_tmp()== 4||_tmp()== 5||_tmp()== 6)? 1:
+               (_tmp()== 13)? 2:
+               (_tmp()== 16||_tmp()== 17||_tmp()== 18)? 3:
+               0)"/>
     <Expand>
       <Synthetic Name="[type]">
         <DisplayString>UINT8</DisplayString>
       </Synthetic>
-
       <Synthetic Name="[channels]">
-        <DisplayString Condition="(*(int*)(((char*)this)+48))==4">BGRA</DisplayString>
-        <DisplayString Condition="(*(int*)(((char*)this)+48))==5">BGRA</DisplayString>
-        <DisplayString Condition="(*(int*)(((char*)this)+48))==6">BGRA</DisplayString>
-        <DisplayString Condition="(*(int*)(((char*)this)+48))==13">RGB</DisplayString>
-        <DisplayString Condition="(*(int*)(((char*)this)+48))==16">RGBA</DisplayString>
-        <DisplayString Condition="(*(int*)(((char*)this)+48))==17">RGBA</DisplayString>
-        <DisplayString Condition="(*(int*)(((char*)this)+48))==18">RGBA</DisplayString>
+        <DisplayString Condition="colorSpace()==1">BGRA</DisplayString>
+        <DisplayString Condition="colorSpace()==2">RGB</DisplayString>
+        <DisplayString Condition="colorSpace()==3">RGBA</DisplayString>
         <DisplayString>1</DisplayString>
       </Synthetic>
-
-      <Item Name="[width]">((Qt5Guid.dll!QImageData*)this)->width</Item>
-      <Item Name="[height]">((Qt5Guid.dll!QImageData*)this)->height</Item>
-      <Item Name="[data]">((Qt5Guid.dll!QImageData*)this)->data</Item>
-      <Item Name="[stride]">((Qt5Guid.dll!QImageData*)this)->bytes_per_line</Item>
+      <Item Name="[width]">_this()->width</Item>
+      <Item Name="[height]">_this()->height</Item>
+      <Item Name="[data]">_this()->data</Item>
+      <Item Name="[stride]">_this()->bytes_per_line</Item>
     </Expand>
   </Type>
 
   <Type Name="QImage">
-    <AlternativeType Name="Qt5Guid.dll!QImage" />
-    <SmartPointer Usage="Full">(Qt5Guid.dll!QImageData*)d</SmartPointer>
+    <Expand>
+      <Item Name="image">(Qt5Guid.dll!QImageData*)d</Item>
+    </Expand>
   </Type>
 </AutoVisualizer>

@@ -47,16 +47,18 @@
   </Type>
 
   <Type Name="XmlOutput">
-    <DisplayString>{xmlFile.d_ptr.d->device->d_ptr.d->writeBuffer.m_buf->buffers[0].chunk,[xmlFile.d_ptr.d->device->d_ptr.d->writeBuffer.m_buf->bufferSize]}{xmlFile.d_ptr.d->writeBuffer}</DisplayString>
+    <Intrinsic Name="_buffer" Expression="xmlFile.d_ptr.d->device->d_ptr.d->writeBuffer.m_buf"/>
+    <DisplayString>{_buffer()->buffers[0].chunk,[_buffer()->bufferSize]}{xmlFile.d_ptr.d->writeBuffer}</DisplayString>
     <Expand>
       <ExpandedItem>xmlFile</ExpandedItem>
     </Expand>
   </Type>
 
   <Type Name="QTextStream">
-    <DisplayString>{d_ptr.d->device->d_ptr.d->writeBuffer.m_buf->buffers[0].chunk,[d_ptr.d->device->d_ptr.d->writeBuffer.m_buf->bufferSize]}{d_ptr.d->writeBuffer}</DisplayString>
+    <Intrinsic Name="_buffer" Expression="d_ptr.d->device->d_ptr.d->writeBuffer.m_buf"/>
+    <DisplayString>{_buffer()->buffers[0].chunk,[_buffer()->bufferSize]}{d_ptr.d->writeBuffer}</DisplayString>
     <Expand>
-      <Item Name="a">d_ptr.d->device->d_ptr.d->writeBuffer.m_buf->buffers[0].chunk,[d_ptr.d->device->d_ptr.d->writeBuffer.m_buf->bufferSize]</Item>
+      <Item Name="a">_buffer()->buffers[0].chunk,[_buffer()->bufferSize]</Item>
       <Item Name="b">d_ptr.d->writeBuffer</Item>
     </Expand>
   </Type>
