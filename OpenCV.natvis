@@ -2,7 +2,7 @@
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
 
   <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" MenuName="Add to Image Watch" />
-  
+
   <Type Name="cv::Matx&lt;*,*,*&gt;">
     <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
   </Type>
@@ -27,40 +27,57 @@
       <Item Name="[data]">(void*)val</Item>
     </Expand>
   </Type>
-  
+
   <Type Name="cv::_InputArray">
     <AlternativeType Name="cv::debug_build_guard::_InputArray" />
     <AlternativeType Name="_InputArray" />
     <AlternativeType Name="InputArray" />
+    <AlternativeType Name="InputArrayOfArrays" />
     <AlternativeType Name="cv::debug_build_guard::_OutputArray" />
     <AlternativeType Name="cv::_OutputArray" />
     <AlternativeType Name="_OutputArray" />
     <AlternativeType Name="OutputArray" />
 
+    <Intrinsic Name="_kind" Expression="flags &amp; KIND_MASK" />
     <DisplayString Condition="!obj" Optional="true">null</DisplayString>
-    <DisplayString Condition="(flags &amp; KIND_MASK) == MAT" Optional="true">Mat {(cv::Mat*)obj}</DisplayString>
-    <DisplayString Condition="(flags &amp; KIND_MASK) == UMAT" Optional="true">UMat {(cv::UMat*)obj}</DisplayString>
-    <DisplayString Condition="(flags &amp; KIND_MASK) == EXPR" Optional="true">MatExpr {(cv::MatExpr*)obj}</DisplayString>
-    <DisplayString Condition="(flags &amp; KIND_MASK) == MATX" Optional="true">MATX { (cv::Scalar*)obj,na }</DisplayString>
+    <DisplayString Condition="_kind() == MAT" Optional="true">Mat {(cv::Mat*)obj}</DisplayString>
+    <DisplayString Condition="_kind() == UMAT" Optional="true">UMat {(cv::UMat*)obj}</DisplayString>
+    <DisplayString Condition="_kind() == EXPR" Optional="true">MatExpr {(cv::MatExpr*)obj}</DisplayString>
+    <DisplayString Condition="_kind() == MATX" Optional="true">MATX { (cv::Scalar*)obj,na }</DisplayString>
+    <DisplayString Condition="_kind() == STD_VECTOR_MAT" Optional="true">vector {obj}</DisplayString>
+    <DisplayString Condition="_kind() == STD_ARRAY_MAT" Optional="true">array {obj}</DisplayString>
+    <DisplayString Condition="_kind() == STD_VECTOR_UMAT" Optional="true">vector {obj}</DisplayString>
     <DisplayString>None</DisplayString>
 
     <Expand>
       <Item Name = "data" Condition="!obj" Optional="true">obj</Item>
-      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == MAT" Optional="true">(cv::Mat*)obj</Item>
-      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == UMAT" Optional="true">(cv::UMat*)obj</Item>
-      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == EXPR" Optional="true">(cv::MatExpr*)obj</Item>
-      <Item Name = "data" Condition="(flags &amp; KIND_MASK) == MATX" Optional="true">(cv::Scalar*)obj,na</Item>
+      <Item Name = "data" Condition="_kind() == MAT" Optional="true">(cv::Mat*)obj</Item>
+      <Item Name = "data" Condition="_kind() == UMAT" Optional="true">(cv::UMat*)obj</Item>
+      <Item Name = "data" Condition="_kind() == EXPR" Optional="true">(cv::MatExpr*)obj</Item>
+      <Item Name = "data" Condition="_kind() == MATX" Optional="true">(cv::Scalar*)obj,na</Item>
+      <ArrayItems Condition="_kind() == STD_VECTOR_MAT" Optional="true">
+        <Size>(cv::Mat*)((void**)obj)[2] - (cv::Mat*)((void**)obj)[1]</Size>
+        <ValuePointer>(cv::Mat*)((void**)obj)[1]</ValuePointer>
+      </ArrayItems>
+      <ArrayItems Condition="_kind() == STD_ARRAY_MAT" Optional="true">
+        <Size>sz.height</Size>
+        <ValuePointer>(cv::Mat*)obj</ValuePointer>
+      </ArrayItems>
+      <ArrayItems Condition="_kind() == STD_VECTOR_UMAT" Optional="true">
+        <Size>(cv::UMat*)((void**)obj)[2] - (cv::UMat*)((void**)obj)[1]</Size>
+        <ValuePointer>(cv::UMat*)((void**)obj)[1]</ValuePointer>
+      </ArrayItems>
     </Expand>
   </Type>
 
   <Type Name="cv::Vec&lt;*,*&gt;">
     <DisplayString ExcludeView="string">{{{($T1*)val,[$T2]nag}}}</DisplayString>
   </Type>
-  
+
   <Type Name="cv::Scalar_&lt;*&gt;">
     <DisplayString>{{{val,[4]g}}}</DisplayString>
   </Type>
-  
+
   <Type Name="cv::Rect_&lt;*&gt;">
     <DisplayString>{{x={x,g}, y={y,g}, width={width,g}, height={height,g}}}</DisplayString>
   </Type>
