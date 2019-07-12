@@ -31,7 +31,7 @@ Usually it is a part of Qt-add-in for MSVS:
 ****************************************************************************
 
 Changes: 2018 Alexey Nikolaev <nae202@gmail.com>
-Motivation: I'm not use this add-in and original file didn't work as expected
+Motivation: I'm not use this add-in. So, the original file didn't work as expected
 1. QString. Show reference, if available.
 2. QStringRef. Added.
 3. QSharedPointer, QWeakPointer, QScopedPointer, QScopedArrayPointer. Replaced annoying message by pointer value (null if empty)
@@ -332,12 +332,9 @@ Motivation: I'm not use this add-in and original file didn't work as expected
 
   <Type Name="QSharedPointer&lt;*&gt;">
     <DisplayString Condition="!value">null</DisplayString>
-    <DisplayString>{*value}</DisplayString>
+    <DisplayString>{{strong = {d-&gt;strongref._q_value}, weak = {d-&gt;weakref._q_value}}}, {*value}</DisplayString>
     <Expand>
-      <Item Name="[value]" Condition="value">*value</Item>
-      <Synthetic Name="[reference]">
-        <DisplayString>{{strong = {d-&gt;strongref._q_value}, weak = {d-&gt;weakref._q_value}}}</DisplayString>
-      </Synthetic>
+      <ExpandedItem Condition="value">*value</ExpandedItem>
     </Expand>
   </Type>
 
@@ -364,13 +361,10 @@ Motivation: I'm not use this add-in and original file didn't work as expected
 
   <Type Name="QWeakPointer&lt;*&gt;">
     <!--weak reference to shared pointer of type {"$T1"}-->
-    <DisplayString Condition="!d || !d-&gt;strongref._q_value || !value">null</DisplayString>
-    <DisplayString>{*value}</DisplayString>
+    <DisplayString Condition="!value">null</DisplayString>
+    <DisplayString>{{strong = {d-&gt;strongref._q_value}, weak = {d-&gt;weakref._q_value}}}, {*value}</DisplayString>
     <Expand>
-      <Item Name="[value]" Condition="d &amp;&amp; value">*value</Item>
-      <Synthetic Name="[reference]">
-        <DisplayString>{{strong = {d-&gt;strongref._q_value}, weak = {d-&gt;weakref._q_value}}}</DisplayString>
-      </Synthetic>
+      <ExpandedItem Condition="value">*value</ExpandedItem>
     </Expand>
   </Type>
 
@@ -400,10 +394,11 @@ Motivation: I'm not use this add-in and original file didn't work as expected
 
   <Type Name="QVector&lt;*&gt;">
     <AlternativeType Name="QStack&lt;*&gt;"></AlternativeType>
-    <DisplayString>{{ size = {d-&gt;size} }}</DisplayString>
+    <DisplayString Condition="d">{{ size = {d-&gt;size} }}</DisplayString>
+    <DisplayString>empty</DisplayString>
     <Expand>
-      <Item Name="[referenced]">d-&gt;ref.atomic._q_value</Item>
-      <ArrayItems>
+      <Item Name="[referenced]" Condition="d">d-&gt;ref.atomic._q_value</Item>
+      <ArrayItems Condition="d">
         <Size>d-&gt;size</Size>
         <ValuePointer>($T1*)((char*)d + d-&gt;offset)</ValuePointer>
       </ArrayItems>
