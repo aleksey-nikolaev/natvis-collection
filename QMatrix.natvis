@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" MenuName="Add to Image Watch" />
+
+  <Type Name="QMatrix4x4">
+    <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
+  </Type>
+  
+  <!--Unfortunately QMatrix have transposed representation in memory-->
+  <Type Name ="QMatrix4x4" Priority="High">
+    <DisplayString>
+      {{{(void*)&amp;m[0][0]} {&amp;m[0][0],[4] nag}, {&amp;m[1][0],[4] nag}, {&amp;m[2][0],[4] nag}, {&amp;m[3][0],[4] nag} }}
+    </DisplayString>
+    <Expand>
+      <Synthetic Name="[type]">
+        <DisplayString>FLOAT32</DisplayString>
+      </Synthetic>
+      <Item Name="[channels]">1</Item>
+      <Item Name="[width]">4</Item>
+      <Item Name="[height]">4</Item>
+      <Item Name="[stride]">sizeof(m[0])</Item>
+      <Item Name="[data]">(void*)m</Item>
+    </Expand>
+  </Type>
+</AutoVisualizer>

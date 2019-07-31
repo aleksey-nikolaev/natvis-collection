@@ -153,6 +153,31 @@ Motivation: I'm not use this add-in. So, the original file didn't work as expect
       <Item Name="[w]">wp</Item>
     </Expand>
   </Type>
+  
+  <!--Alternative QVector for newer Qt -->
+  <Type Name ="QVector2D">
+    <Expand>
+      <Item Name="x">v[0],g</Item>
+      <Item Name="y">v[1],g</Item>
+    </Expand>
+  </Type>
+
+  <Type Name ="QVector3D">
+    <Expand>
+      <Item Name="x">v[0],g</Item>
+      <Item Name="y">v[1],g</Item>
+      <Item Name="z">v[2],g</Item>
+    </Expand>
+  </Type>
+
+  <Type Name ="QVector4D">
+    <Expand>
+      <Item Name="x">v[0],g</Item>
+      <Item Name="y">v[1],g</Item>
+      <Item Name="z">v[2],g</Item>
+      <Item Name="w">v[3],g</Item>
+    </Expand>
+  </Type>
 
   <Type Name ="QMatrix">
     <DisplayString>
