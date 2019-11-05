@@ -6,15 +6,30 @@
   <Type Name="QMatrix4x4">
     <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
   </Type>
-  
+
   <!--Unfortunately QMatrix have transposed representation in memory-->
-  <Type Name ="QMatrix4x4" Priority="High">
-    <DisplayString>
-      {{{(void*)&amp;m[0][0]} {&amp;m[0][0],[4] nag}, {&amp;m[1][0],[4] nag}, {&amp;m[2][0],[4] nag}, {&amp;m[3][0],[4] nag} }}
-    </DisplayString>
+  <Type Name ="QMatrix4x4" Priority="MediumHigh">
+    <!--Identity        = 0x0000, // Identity matrix
+        Translation     = 0x0001, // Contains a translation
+        Scale           = 0x0002, // Contains a scale
+        Rotation2D      = 0x0004, // Contains a rotation about the Z axis
+        Rotation        = 0x0008, // Contains an arbitrary rotation
+        Perspective     = 0x0010, // Last row is different from (0, 0, 0, 1)
+        General         = 0x001f  // General matrix, unknown contents-->
+    <Intrinsic Name="ss" Expression="flagBits==Identity?Identity:
+      flagBits==Translation?Translation:
+      flagBits==Scale?Scale:
+      flagBits==Rotation2D?Rotation2D:
+      flagBits==Rotation?Rotation:
+      flagBits==Perspective?Perspective:
+      flagBits==General?General:General"/>
+    <DisplayString Condition="ss()!=General"> {ss()} {{ {&amp;m[0][0],[4] nag}, {&amp;m[1][0],[4] nag}, {&amp;m[2][0],[4] nag}, {&amp;m[3][0],[4] nag} }}</DisplayString>
+    <DisplayString Condition="flagBits==3"> Scale | Translation {{ {&amp;m[0][0],[4] nag}, {&amp;m[1][0],[4] nag}, {&amp;m[2][0],[4] nag}, {&amp;m[3][0],[4] nag} }}</DisplayString>
+    <DisplayString>{{ ({flagBits}) }} {{ {&amp;m[0][0],[4] nag}, {&amp;m[1][0],[4] nag}, {&amp;m[2][0],[4] nag}, {&amp;m[3][0],[4] nag} }}</DisplayString>
     <Expand>
       <Synthetic Name="[type]">
-        <DisplayString>FLOAT32</DisplayString>
+        <DisplayString Condition="sizeof(m[0][0])==4">FLOAT32</DisplayString>
+        <DisplayString Condition="sizeof(m[0][0])==8">FLOAT64</DisplayString>
       </Synthetic>
       <Item Name="[channels]">1</Item>
       <Item Name="[width]">4</Item>
@@ -23,4 +38,35 @@
       <Item Name="[data]">(void*)m</Item>
     </Expand>
   </Type>
+
+  <Type Name="QMatrix">
+    <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
+  </Type>
+
+  <Type Name ="QMatrix" Priority="MediumHigh">
+    <!-- {{{{{_m11,g}, {_m12,g}}}, {{{_m21,g}, {_m22,g}}}, {{{_dx,g}, {_dy,g}}}}}-->
+    <DisplayString>
+      {{{{{_m11,g}, {_m12,g}, {_dx,g}}}, {{{_m21,g}, {_m22,g}, {_dy,g}}}}}
+    </DisplayString>
+    <Expand>
+      <Synthetic Name="[type]">
+        <DisplayString Condition="sizeof(_m11)==4">FLOAT32</DisplayString>
+        <DisplayString Condition="sizeof(_m11)==8">FLOAT64</DisplayString>
+      </Synthetic>
+      <Item Name="[channels]">1</Item>
+      <Item Name="[width]">2</Item>
+      <Item Name="[height]">3</Item>
+      <Item Name="[stride]">sizeof(_m11)*2</Item>
+      <Item Name="[data]">(void*)this</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="QOpenGLTexture">
+    <Intrinsic Name="the" Expression="((Qt5Guid.dll!QOpenGLTexturePrivate*)d_ptr.d)"></Intrinsic>
+    <DisplayString>QOpenGLTexture (textureId = {the()->textureId}, format = {the()->format})</DisplayString>
+    <Expand>
+      <ExpandedItem>the()</ExpandedItem>
+    </Expand>
+  </Type>
+
 </AutoVisualizer>
