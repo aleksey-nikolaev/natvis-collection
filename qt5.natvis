@@ -72,7 +72,7 @@ Motivation: I'm not use this add-in. So, the original file didn't work as expect
 
   <Type Name="QSize">
     <AlternativeType Name="QSizeF" />
-    <DisplayString>{{ width = {wd}, height = {ht} }}</DisplayString>
+    <DisplayString>{{ width = {wd,g}, height = {ht,g} }}</DisplayString>
     <Expand>
       <Item Name="[width]">wd</Item>
       <Item Name="[height]">ht</Item>
@@ -153,7 +153,7 @@ Motivation: I'm not use this add-in. So, the original file didn't work as expect
       <Item Name="[w]">wp</Item>
     </Expand>
   </Type>
-  
+
   <!--Alternative QVector for newer Qt -->
   <Type Name ="QVector2D">
     <Expand>
@@ -180,8 +180,9 @@ Motivation: I'm not use this add-in. So, the original file didn't work as expect
   </Type>
 
   <Type Name ="QMatrix">
+    <!-- {{{{{_m11,g}, {_m12,g}}}, {{{_m21,g}, {_m22,g}}}, {{{_dx,g}, {_dy,g}}}}}-->
     <DisplayString>
-      {{ m11 = {_m11}, m12 = {_m12}, m21 = {_m21}, m22 = {_m22}, ... }}
+      {{{{{_m11,g}, {_m12,g}, {_dx,g}}}, {{{_m21,g}, {_m22,g}, {_dy,g}}}}}
     </DisplayString>
     <Expand>
       <Item Name="[m11]">_m11</Item>
@@ -191,6 +192,19 @@ Motivation: I'm not use this add-in. So, the original file didn't work as expect
       <Item Name="[dx]">_dx</Item>
       <Item Name="[dy]">_dy</Item>
     </Expand>
+  </Type>
+
+  <Type Name ="QTransform">
+    <DisplayString Condition="false">
+      {{
+      {{{affine._m11,g}, {affine._m12,g}, {m_13,g}}},
+      {{{affine._m21,g}, {affine._m22,g}, {m_23,g}}},
+      {{{affine._dx,g}, {affine._dy,g}, {m_33,g}}}
+      }}
+    </DisplayString>
+    <DisplayString>
+      {{ {{{affine._m11,g}, {affine._m21,g}, {affine._dx,g}}}, {{{affine._m12,g}, {affine._m22,g}, {affine._dy,g}}}, {{{m_13,g}, {m_23,g}, {m_33,g}}} }}
+    </DisplayString>
   </Type>
 
   <Type Name ="QMatrix4x4">
@@ -357,7 +371,7 @@ Motivation: I'm not use this add-in. So, the original file didn't work as expect
 
   <Type Name="QSharedPointer&lt;*&gt;">
     <DisplayString Condition="!value">null</DisplayString>
-    <DisplayString>{{strong = {d-&gt;strongref._q_value}, weak = {d-&gt;weakref._q_value}}}, {*value}</DisplayString>
+    <DisplayString>{{s|w={d-&gt;strongref._q_value}|{d-&gt;weakref._q_value}}}, {*value}</DisplayString>
     <Expand>
       <ExpandedItem Condition="value">*value</ExpandedItem>
     </Expand>
@@ -387,9 +401,9 @@ Motivation: I'm not use this add-in. So, the original file didn't work as expect
   <Type Name="QWeakPointer&lt;*&gt;">
     <!--weak reference to shared pointer of type {"$T1"}-->
     <DisplayString Condition="!value">null</DisplayString>
-    <DisplayString>{{strong = {d-&gt;strongref._q_value}, weak = {d-&gt;weakref._q_value}}}, {*value}</DisplayString>
+    <DisplayString>{{s|w={d-&gt;strongref._q_value}|{d-&gt;weakref._q_value} {(void*)value}}}</DisplayString>
     <Expand>
-      <ExpandedItem Condition="value">*value</ExpandedItem>
+      <ExpandedItem Condition="value">value</ExpandedItem>
     </Expand>
   </Type>
 
@@ -398,7 +412,7 @@ Motivation: I'm not use this add-in. So, the original file didn't work as expect
     <DisplayString Condition="!d">null</DisplayString>
     <DisplayString>{*d}</DisplayString>
     <Expand>
-      <Item Name="[value]" Condition="d">*d</Item>
+      <ExpandedItem Condition="d">*d</ExpandedItem>
     </Expand>
   </Type>
 
