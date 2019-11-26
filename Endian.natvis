@@ -3,25 +3,32 @@
 
   <Type Name="endianness::Endian&lt;*&gt;">
     <Intrinsic Name="arrayView" Category="Method" Expression="reinterpret_cast&lt;unsigned char*&gt;(&amp;value)" />
-    <Intrinsic Name="byteAt" Category="Method" Expression="a &lt; sizeof($T1) ? arrayView()[a] : 0" >
-      <Parameter Name="a" Type="int"/>
+    <Intrinsic Name="byteAt" Category="Method" Expression="a &lt; sizeof($T1) ? arrayView()[a] : 0">
+      <Parameter Name="a" Type="int" />
     </Intrinsic>
-    <Intrinsic Name="byteSh" Category="Method" Expression="a &lt; sizeof($T1) ? (byteAt(a)&lt;&lt;8*(sizeof($T1)-1-a)) : 0" >
-      <Parameter Name="a" Type="int"/>
+    <Intrinsic Name="byteSh" Category="Method" Expression="a &lt; sizeof($T1) ? (byteAt(a)&lt;&lt;8*(sizeof($T1)-1-a)) : 0">
+      <Parameter Name="a" Type="int" />
     </Intrinsic>
     <Intrinsic Name="swaped" Category="Method" Expression="byteSh(0)|byteSh(1)|byteSh(2)|byteSh(3)|byteSh(4)|byteSh(5)|byteSh(6)|byteSh(7)|byteSh(8)" />
-    <Intrinsic Name="isStr" Category="Method" Expression="!(byteAt(0)&lt;32||byteAt(1)&lt;32||byteAt(2)&lt;32||byteAt(3)&lt;32||sizeof($T1)&gt;4)" />
+    <Intrinsic Name="isStr" Category="Method" Expression="value&gt;0&amp;&amp;!(byteAt(0)&lt;32||byteAt(1)&lt;32||byteAt(2)&lt;32||byteAt(3)&lt;32||sizeof($T1)&gt;4)" />
     <Intrinsic Name="isBigLittle" Category="Method" Expression="$T2==endianness::stl20::endian::little || $T2==endianness::stl20::endian::big" />
 
-    <DisplayString Condition="isBigLittle() &amp;&amp; isStr()">
-      {{{(endianness::stl20::endian)$T2,en} {value,h} {arrayView(),[sizeof($T1)]na}}}
+    <DisplayString IncludeView="str">
+      {arrayView(),[sizeof($T1)]na}
     </DisplayString>
-    <DisplayString Condition="isBigLittle()">
-      {$T2==endianness::stl20::endian::native?value:swaped()} {{{(endianness::stl20::endian)$T2,en} {value,h}}}
+    <DisplayString IncludeView="native">
+      {$T2==endianness::stl20::endian::native ? value : swaped()}
+    </DisplayString>
+
+    <DisplayString Condition="!isBigLittle()">
+      {value} {{{(endianness::stl20::endian)$T2,en} {value,h} {*this,view(str)}}}
+    </DisplayString>
+
+    <DisplayString Condition="isStr()">
+      {{{(endianness::stl20::endian)$T2,en} {value,h} {*this,view(str)}}}
     </DisplayString>
     <DisplayString>
-      {value} {{{(endianness::stl20::endian)$T2,en} {value,h} {arrayView(),[sizeof($T1)]na}}}
+      {*this,view(native)} {{{(endianness::stl20::endian)$T2,en} {value,h}}}
     </DisplayString>
   </Type>
-
 </AutoVisualizer>
