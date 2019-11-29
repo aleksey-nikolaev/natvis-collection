@@ -12,12 +12,13 @@
     <Intrinsic Name="swaped" Category="Method" Expression="byteSh(0)|byteSh(1)|byteSh(2)|byteSh(3)|byteSh(4)|byteSh(5)|byteSh(6)|byteSh(7)|byteSh(8)" />
     <Intrinsic Name="isStr" Category="Method" Expression="value&gt;0&amp;&amp;!(byteAt(0)&lt;32||byteAt(1)&lt;32||byteAt(2)&lt;32||byteAt(3)&lt;32||sizeof($T1)&gt;4)" />
     <Intrinsic Name="isBigLittle" Category="Method" Expression="$T2==std::endian::little || $T2==std::endian::big" />
+    <Intrinsic Name="native" Category="Method" Expression="$T2==std::endian::native ? value : swaped()" />
 
     <DisplayString IncludeView="str">
       {arrayView(),[sizeof($T1)]na}
     </DisplayString>
     <DisplayString IncludeView="native">
-      {$T2==std::endian::native ? value : swaped()}
+      {native()}
     </DisplayString>
 
     <DisplayString Condition="!isBigLittle()">

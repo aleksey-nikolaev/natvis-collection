@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" MenuName="Add to Image Watch" />
+
+  <Type Name="ImageChannel">
+    <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
+  </Type>
+  <Type Name="ImageChannel">
+    <DisplayString>
+      {{{width}, {height}, {depth}}}
+    </DisplayString>
+    <Expand>
+      <Synthetic Name="[type]">
+        <DisplayString Condition="depth==1">UINT8</DisplayString>
+        <DisplayString Condition="depth==8">UINT8</DisplayString>
+        <DisplayString Condition="depth==16">INT16</DisplayString>
+        <DisplayString Condition="depth==32">FLOAT32</DisplayString>
+        <DisplayString>UINT8</DisplayString>
+      </Synthetic>
+      <Item Name="[channels]">1</Item>
+      <Synthetic Name="[width]">
+        <DisplayString Condition="depth==1">{width>2000?2000:((width+7)/8)}</DisplayString>
+        <DisplayString>{width>2000?2000:width}</DisplayString>
+      </Synthetic>
+      <Item Name="[height]">height>2000?2000:height</Item>
+      <Item Name="[data]">&amp;data[0]</Item>
+      <Item Name="[stride]">(width * depth + 7) / 8</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="psd::Image">
+    <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
+  </Type>
+  <Type Name="psd::Image">
+    <DisplayString>
+      {{ pos = ({rect.x}, {rect.y}), size = ({rect.width}, {rect.height}), {depth}, {channels.size()} }}
+    </DisplayString>
+    <Expand>
+      <Synthetic Name="[type]">
+        <DisplayString Condition="depth==1">UINT8</DisplayString>
+        <DisplayString Condition="depth==8">UINT8</DisplayString>
+        <DisplayString Condition="depth==16">UINT16</DisplayString>
+        <DisplayString Condition="depth==32">FLOAT32</DisplayString>
+        <DisplayString>UINT8</DisplayString>
+      </Synthetic>
+      <Item Name="[channels]">channels.size()</Item>
+      <Synthetic Name="[width]">
+        <DisplayString Condition="depth==1">{rect.width>2000?2000:((rect.width+7)/8)}</DisplayString>
+        <DisplayString>{rect.width>2000?2000:rect.width}</DisplayString>
+      </Synthetic>
+      <Item Name="[height]">rect.height>2000?2000:rect.height</Item>
+      <Item Name="[stride]">(rect.width * depth + 7) / 8</Item>
+      <Item Name="[planes]">channels.size()</Item>
+      <Synthetic Name="[data]">
+        <DisplayString Condition="channels.size()==1">{(void*)&amp;channels[0][0]}</DisplayString>
+        <DisplayString Condition="channels.size()==2">{(void*)&amp;channels[0][0]}; {(void*)&amp;channels[1][0]}</DisplayString>
+        <DisplayString Condition="channels.size()==3">{(void*)&amp;channels[2][0]}; {(void*)&amp;channels[1][0]}; {(void*)&amp;channels[0][0]}</DisplayString>
+        <DisplayString Condition="channels.size()==4">{(void*)&amp;channels[3][0]}; {(void*)&amp;channels[2][0]}; {(void*)&amp;channels[1][0]}; {(void*)&amp;channels[0][0]}</DisplayString>
+        <DisplayString>{(void*)&amp;channels[0][0]}</DisplayString>
+      </Synthetic>
+    </Expand>
+  </Type>
+
+  <Type Name="Psd::Result">
+    <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
+  </Type>
+  <Type Name="Psd::Result">
+    <DisplayString>
+      {{{width}, {height}, {depth}}}
+    </DisplayString>
+    <Expand>
+      <Synthetic Name="[type]">
+        <DisplayString Condition="depth==1">UINT8</DisplayString>
+        <DisplayString Condition="depth==8">UINT8</DisplayString>
+        <DisplayString Condition="depth==16">UINT16</DisplayString>
+        <DisplayString Condition="depth==32">FLOAT32</DisplayString>
+        <DisplayString>UINT8</DisplayString>
+      </Synthetic>
+      <Item Name="[channels]">channels</Item>
+      <Synthetic Name="[width]">
+        <DisplayString Condition="depth==1">{width>2000?2000:((width+7)/8)}</DisplayString>
+        <DisplayString>{width>2000?2000:width}</DisplayString>
+      </Synthetic>
+      <Item Name="[height]">height>2000?2000:height</Item>
+      <Item Name="[stride]">(width * depth + 7) / 8</Item>
+      <Item Name="[planes]">channels</Item>
+      <Synthetic Name="[data]">
+        <DisplayString Condition="channels==1">{(void*)&amp;image[0][0]}</DisplayString>
+        <DisplayString Condition="channels==2">{(void*)&amp;image[0][0]}; {(void*)&amp;image[1][0]}</DisplayString>
+        <DisplayString Condition="channels==3">{(void*)&amp;image[2][0]}; {(void*)&amp;image[1][0]}; {(void*)&amp;image[0][0]}</DisplayString>
+        <DisplayString Condition="channels==4">{(void*)&amp;image[3][0]}; {(void*)&amp;image[2][0]}; {(void*)&amp;image[1][0]}; {(void*)&amp;image[0][0]}</DisplayString>
+        <DisplayString >{(void*)&amp;image[0][0]}</DisplayString>
+      </Synthetic>
+    </Expand>
+  </Type>
+
+  <Type Name="psd::Parser::Layer">
+    <DisplayString>
+      {{group: {groupLayer}, blend: {blend.key,view(str)}, opacity: {(int)blend.opacity}}} {name} {rectangle}
+    </DisplayString>
+  </Type>
+
+  <Type Name="Rectangle">
+    <DisplayString>
+      {{top: {top,view(native)}, left: {left,view(native)}, bottom: {bottom,view(native)}, right: {right,view(native)}}}
+    </DisplayString>
+  </Type>
+
+  <Type Name="std::pair&lt;endianness::Endian&lt;*&gt;,psd::Parser::ImageResource&gt;">
+    <DisplayString Condition="first.native()==1000">(Obsolete--Photoshop 2.0 only ) Contains five 2-byte values: number of channels, rows, columns, depth, and mode</DisplayString>
+    <DisplayString Condition="first.native()==1001">Macintosh print manager print info record</DisplayString>
+    <DisplayString Condition="first.native()==1002">Macintosh page format information. No longer read by Photoshop. (Obsolete)</DisplayString>
+    <DisplayString Condition="first.native()==1003">(Obsolete--Photoshop 2.0 only ) Indexed color table</DisplayString>
+    <DisplayString Condition="first.native()==1005">ResolutionInfo structure. See Appendix A in Photoshop API Guide.pdf.</DisplayString>
+    <DisplayString Condition="first.native()==1006">Names of the alpha channels as a series of Pascal strings.</DisplayString>
+    <DisplayString Condition="first.native()==1007">(Obsolete) See ID 1077DisplayInfo structure. See Appendix A in Photoshop API Guide.pdf.</DisplayString>
+    <DisplayString Condition="first.native()==1008">The caption as a Pascal string.</DisplayString>
+    <DisplayString Condition="first.native()==1009">Border information. Contains a fixed number (2 bytes real, 2 bytes fraction) for the border width, and 2 bytes for border units (1 = inches, 2 = cm, 3 = points, 4 = picas, 5 = columns).</DisplayString>
+    <DisplayString Condition="first.native()==1010">Background color. See See Color structure.</DisplayString>
+    <DisplayString Condition="first.native()==1011">Print flags. A series of one-byte boolean values (see Page Setup dialog): labels, crop marks, color bars, registration marks, negative, flip, interpolate, caption, print flags.</DisplayString>
+    <DisplayString Condition="first.native()==1012">Grayscale and multichannel halftoning information</DisplayString>
+    <DisplayString Condition="first.native()==1013">Color halftoning information</DisplayString>
+    <DisplayString Condition="first.native()==1014">Duotone halftoning information</DisplayString>
+    <DisplayString Condition="first.native()==1015">Grayscale and multichannel transfer function</DisplayString>
+    <DisplayString Condition="first.native()==1016">Color transfer functions</DisplayString>
+    <DisplayString Condition="first.native()==1017">Duotone transfer functions</DisplayString>
+    <DisplayString Condition="first.native()==1018">Duotone image information</DisplayString>
+    <DisplayString Condition="first.native()==1019">Two bytes for the effective black and white values for the dot range</DisplayString>
+    <DisplayString Condition="first.native()==1020">(Obsolete)</DisplayString>
+    <DisplayString Condition="first.native()==1021">EPS options</DisplayString>
+    <DisplayString Condition="first.native()==1022">Quick Mask information. 2 bytes containing Quick Mask channel ID; 1- byte boolean indicating whether the mask was initially empty.</DisplayString>
+    <DisplayString Condition="first.native()==1023">(Obsolete)</DisplayString>
+    <DisplayString Condition="first.native()==1024">Layer state information. 2 bytes containing the index of target layer (0 = bottom layer).</DisplayString>
+    <DisplayString Condition="first.native()==1025">Working path (not saved). See See Path resource format.</DisplayString>
+    <DisplayString Condition="first.native()==1026">Layers group information. 2 bytes per layer containing a group ID for the dragging groups. Layers in a group have the same group ID.</DisplayString>
+    <DisplayString Condition="first.native()==1027">(Obsolete)</DisplayString>
+    <DisplayString Condition="first.native()==1028">IPTC-NAA record. Contains the File Info... information. See the documentation in the IPTC folder of the Documentation folder.</DisplayString>
+    <DisplayString Condition="first.native()==1029">Image mode for raw format files</DisplayString>
+    <DisplayString Condition="first.native()==1030">JPEG quality. Private.</DisplayString>
+    <DisplayString Condition="first.native()==1032">(Photoshop 4.0) Grid and guides information. See See Grid and guides resource format.</DisplayString>
+    <DisplayString Condition="first.native()==1033">(Photoshop 4.0) Thumbnail resource for Photoshop 4.0 only. See See Thumbnail resource format.</DisplayString>
+    <DisplayString Condition="first.native()==1034">(Photoshop 4.0) Copyright flag. Boolean indicating whether image is copyrighted. Can be set via Property suite or by user in File Info...</DisplayString>
+    <DisplayString Condition="first.native()==1035">(Photoshop 4.0) URL. Handle of a text string with uniform resource locator. Can be set via Property suite or by user in File Info...</DisplayString>
+    <DisplayString Condition="first.native()==1036">(Photoshop 5.0) Thumbnail resource (supersedes resource 1033). See See Thumbnail resource format.</DisplayString>
+    <DisplayString Condition="first.native()==1037">(Photoshop 5.0) Global Angle. 4 bytes that contain an integer between 0 and 359, which is the global lighting angle for effects layer. If not present, assumed to be 30.</DisplayString>
+    <DisplayString Condition="first.native()==1038">(Obsolete) See ID 1073 below. (Photoshop 5.0) Color samplers resource. See See Color samplers resource format.</DisplayString>
+    <DisplayString Condition="first.native()==1039">(Photoshop 5.0) ICC Profile. The raw bytes of an ICC (International Color Consortium) format profile. See ICC1v42_2006-05.pdf in the Documentation folder and icProfileHeader.h in Sample Code\Common\Includes .</DisplayString>
+    <DisplayString Condition="first.native()==1040">(Photoshop 5.0) Watermark. One byte.</DisplayString>
+    <DisplayString Condition="first.native()==1041">(Photoshop 5.0) ICC Untagged Profile. 1 byte that disables any assumed profile handling when opening the file. 1 = intentionally untagged.</DisplayString>
+    <DisplayString Condition="first.native()==1042">(Photoshop 5.0) Effects visible. 1-byte global flag to show/hide all the effects layer. Only present when they are hidden.</DisplayString>
+    <DisplayString Condition="first.native()==1043">(Photoshop 5.0) Spot Halftone. 4 bytes for version, 4 bytes for length, and the variable length data.</DisplayString>
+    <DisplayString Condition="first.native()==1044">(Photoshop 5.0) Document-specific IDs seed number. 4 bytes: Base value, starting at which layer IDs will be generated (or a greater value if existing IDs already exceed it). Its purpose is to avoid the case where we add layers, flatten, save, open, and then add more layers that end up with the same IDs as the first set.</DisplayString>
+    <DisplayString Condition="first.native()==1045">(Photoshop 5.0) Unicode Alpha Names. Unicode string</DisplayString>
+    <DisplayString Condition="first.native()==1046">(Photoshop 6.0) Indexed Color Table Count. 2 bytes for the number of colors in table that are actually defined</DisplayString>
+    <DisplayString Condition="first.native()==1047">(Photoshop 6.0) Transparency Index. 2 bytes for the index of transparent color, if any.</DisplayString>
+    <DisplayString Condition="first.native()==1049">(Photoshop 6.0) Global Altitude. 4 byte entry for altitude</DisplayString>
+    <DisplayString Condition="first.native()==1050">(Photoshop 6.0) Slices. See See Slices resource format.</DisplayString>
+    <DisplayString Condition="first.native()==1051">(Photoshop 6.0) Workflow URL. Unicode string</DisplayString>
+    <DisplayString Condition="first.native()==1052">(Photoshop 6.0) Jump To XPEP. 2 bytes major version, 2 bytes minor version, 4 bytes count. Following is repeated for count: 4 bytes block size, 4 bytes key, if key = 'jtDd' , then next is a Boolean for the dirty flag; otherwise it's a 4 byte entry for the mod date.</DisplayString>
+    <DisplayString Condition="first.native()==1053">(Photoshop 6.0) Alpha Identifiers. 4 bytes of length, followed by 4 bytes each for every alpha identifier.</DisplayString>
+    <DisplayString Condition="first.native()==1054">(Photoshop 6.0) URL List. 4 byte count of URLs, followed by 4 byte long, 4 byte ID, and Unicode string for each count.</DisplayString>
+    <DisplayString Condition="first.native()==1057">(Photoshop 6.0) Version Info. 4 bytes version, 1 byte hasRealMergedData , Unicode string: writer name, Unicode string: reader name, 4 bytes file version.</DisplayString>
+    <DisplayString Condition="first.native()==1058">(Photoshop 7.0) EXIF data 1. See http://www.kodak.com/global/plugins/acrobat/en/service/digCam/exifStandard2.pdf</DisplayString>
+    <DisplayString Condition="first.native()==1059">(Photoshop 7.0) EXIF data 3. See http://www.kodak.com/global/plugins/acrobat/en/service/digCam/exifStandard2.pdf</DisplayString>
+    <DisplayString Condition="first.native()==1060">(Photoshop 7.0) XMP metadata. File info as XML description. See http://www.adobe.com/devnet/xmp/</DisplayString>
+    <DisplayString Condition="first.native()==1061">(Photoshop 7.0) Caption digest. 16 bytes: RSA Data Security, MD5 message-digest algorithm</DisplayString>
+    <DisplayString Condition="first.native()==1062">(Photoshop 7.0) Print scale. 2 bytes style (0 = centered, 1 = size to fit, 2 = user defined). 4 bytes x location (floating point). 4 bytes y location (floating point). 4 bytes scale (floating point)</DisplayString>
+    <DisplayString Condition="first.native()==1064">(Photoshop CS) Pixel Aspect Ratio. 4 bytes (version = 1 or 2), 8 bytes double, x / y of a pixel. Version 2, attempting to correct values for NTSC and PAL, previously off by a factor of approx. 5%.</DisplayString>
+    <DisplayString Condition="first.native()==1065">(Photoshop CS) Layer Comps. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure)</DisplayString>
+    <DisplayString Condition="first.native()==1066">(Photoshop CS) Alternate Duotone Colors. 2 bytes (version = 1), 2 bytes count, following is repeated for each count: [ Color: 2 bytes for space followed by 4 * 2 byte color component ], following this is another 2 byte count, usually 256, followed by Lab colors one byte each for L, a, b. This resource is not read or used by Photoshop.</DisplayString>
+    <DisplayString Condition="first.native()==1067">(Photoshop CS)Alternate Spot Colors. 2 bytes (version = 1), 2 bytes channel count, following is repeated for each count: 4 bytes channel ID, Color: 2 bytes for space followed by 4 * 2 byte color component. This resource is not read or used by Photoshop.</DisplayString>
+    <DisplayString Condition="first.native()==1069">(Photoshop CS2) Layer Selection ID(s). 2 bytes count, following is repeated for each count: 4 bytes layer ID</DisplayString>
+    <DisplayString Condition="first.native()==1070">(Photoshop CS2) HDR Toning information</DisplayString>
+    <DisplayString Condition="first.native()==1071">(Photoshop CS2) Print info</DisplayString>
+    <DisplayString Condition="first.native()==1072">(Photoshop CS2) Layer Group(s) Enabled ID. 1 byte for each layer in the document, repeated by length of the resource. NOTE: Layer groups have start and end markers</DisplayString>
+    <DisplayString Condition="first.native()==1073">(Photoshop CS3) Color samplers resource. Also see ID 1038 for old format. See See Color samplers resource format.</DisplayString>
+    <DisplayString Condition="first.native()==1074">(Photoshop CS3) Measurement Scale. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure)</DisplayString>
+    <DisplayString Condition="first.native()==1075">(Photoshop CS3) Timeline Information. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure)</DisplayString>
+    <DisplayString Condition="first.native()==1076">(Photoshop CS3) Sheet Disclosure. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure)</DisplayString>
+    <DisplayString Condition="first.native()==1077">(Photoshop CS3) DisplayInfo structure to support floating point clors. Also see ID 1007. See Appendix A in Photoshop API Guide.pdf .</DisplayString>
+    <DisplayString Condition="first.native()==1078">(Photoshop CS3) Onion Skins. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure)</DisplayString>
+    <DisplayString Condition="first.native()==1080">(Photoshop CS4) Count Information. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure) Information about the count in the document. See the Count Tool.</DisplayString>
+    <DisplayString Condition="first.native()==1082">(Photoshop CS5) Print Information. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure) Information about the current print settings in the document. The color management options.</DisplayString>
+    <DisplayString Condition="first.native()==1083">(Photoshop CS5) Print Style. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure) Information about the current print style in the document. The printing marks, labels, ornaments, etc.</DisplayString>
+    <DisplayString Condition="first.native()==1084">(Photoshop CS5) Macintosh NSPrintInfo. Variable OS specific info for Macintosh. NSPrintInfo. It is recommened that you do not interpret or use this data.</DisplayString>
+    <DisplayString Condition="first.native()==1085">(Photoshop CS5) Windows DEVMODE. Variable OS specific info for Windows. DEVMODE. It is recommened that you do not interpret or use this data.</DisplayString>
+    <DisplayString Condition="first.native()==1086">(Photoshop CS6) Auto Save File Path. Unicode string. It is recommened that you do not interpret or use this data.</DisplayString>
+    <DisplayString Condition="first.native()==1087">(Photoshop CS6) Auto Save Format. Unicode string. It is recommened that you do not interpret or use this data.</DisplayString>
+    <DisplayString Condition="first.native()==1088">(Photoshop CC) Path Selection State. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure) Information about the current path selection state.</DisplayString>
+    <DisplayString Condition="first.native()&gt;=2000&amp;&amp;first.native()&lt;=2997">
+      Path Information (saved paths). See See Path resource format."
+    </DisplayString>
+    <DisplayString Condition="first.native()==2999">Name of clipping path. See See Path resource format.</DisplayString>
+    <DisplayString Condition="first.native()==3000">(Photoshop CC) Origin Path Info. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure) Information about the origin path data.</DisplayString>
+    <DisplayString Condition="first.native()&gt;=4000&amp;&amp;first.native()&lt;=4999">
+      Plug-In resource(s). Resources added by a plug-in. See the plug-in API found in the SDK documentation
+    </DisplayString>
+    <DisplayString Condition="first.native()==7000">Image Ready variables. XML representation of variables definition</DisplayString>
+    <DisplayString Condition="first.native()==7001">Image Ready data sets</DisplayString>
+    <DisplayString Condition="first.native()==7002">Image Ready default selected state</DisplayString>
+    <DisplayString Condition="first.native()==7003">Image Ready 7 rollover expanded state</DisplayString>
+    <DisplayString Condition="first.native()==7004">Image Ready rollover expanded state</DisplayString>
+    <DisplayString Condition="first.native()==7005">Image Ready save layer settings</DisplayString>
+    <DisplayString Condition="first.native()==7006">Image Ready version</DisplayString>
+    <DisplayString Condition="first.native()==8000">(Photoshop CS3) Lightroom workflow, if present the document is in the middle of a Lightroom workflow.</DisplayString>
+    <DisplayString Condition="first.native()==10000">Print flags information. 2 bytes version ( = 1), 1 byte center crop marks, 1 byte ( = 0), 4 bytes bleed width value, 2 bytes bleed width scale.</DisplayString>
+    <DisplayString>{first.native()}</DisplayString>
+  </Type>
+
+  <Type Name="std::pair&lt;endianness::Endian&lt;*&gt;,psd::Stream&gt;">
+    <DisplayString Condition="first.native()=='Lr16'||first.native()=='Lr32'||first.native()=='Layr'">Layer Info</DisplayString>
+    <DisplayString Condition="first.native()=='cinf'">Some metadata</DisplayString>
+
+    <DisplayString Condition="first.native()=='SoCo'">Solid Color</DisplayString>
+    <DisplayString Condition="first.native()=='GdFl'">Gradient</DisplayString>
+    <DisplayString Condition="first.native()=='PtFl'">Pattern</DisplayString>
+    <DisplayString Condition="first.native()=='brit'">Brightness/Contrast</DisplayString>
+    <DisplayString Condition="first.native()=='levl'">Levels</DisplayString>
+    <DisplayString Condition="first.native()=='curv'">Curves</DisplayString>
+    <DisplayString Condition="first.native()=='expA'">Exposure</DisplayString>
+    <DisplayString Condition="first.native()=='vibA'">Vibrance</DisplayString>
+    <DisplayString Condition="first.native()=='hue '">Old Hue/saturation, Photoshop 4.0</DisplayString>
+    <DisplayString Condition="first.native()=='hue2'">New Hue/saturation, Photoshop 5.0</DisplayString>
+    <DisplayString Condition="first.native()=='blnc'">Color Balance</DisplayString>
+    <DisplayString Condition="first.native()=='blwh'">Black and White</DisplayString>
+    <DisplayString Condition="first.native()=='phfl'">Photo Filter</DisplayString>
+    <DisplayString Condition="first.native()=='mixr'">Channel Mixer</DisplayString>
+    <DisplayString Condition="first.native()=='clrL'">Color Lookup</DisplayString>
+    <DisplayString Condition="first.native()=='nvrt'">Invert</DisplayString>
+    <DisplayString Condition="first.native()=='post'">Posterize</DisplayString>
+    <DisplayString Condition="first.native()=='thrs'">Threshold</DisplayString>
+    <DisplayString Condition="first.native()=='grdm'">Gradient Map</DisplayString>
+    <DisplayString Condition="first.native()=='selc'">Selective color</DisplayString>
+
+    <!-- Exracted from https://www.adobe.com/devnet-apps/photoshop/fileformatashtml
+Array.from(document.querySelectorAll("body > div:nth-child(13) > div > div:nth-child(7) > div:nth-child(11) > div:nth-child(37) > p.FM3Head")).map((n)=>{
+  var txt = n.textContent.trim();
+  var nn = n.nextElementSibling;
+  if(nn.getAttribute("class") == "Note"){
+    txt += " " + nn.textContent.trim();
+    nn = nn.nextElementSibling;
+  }
+  var test = Array.from(nn.querySelectorAll("em.Code")).map((t)=>{
+    return "first.native()==" + t.textContent.trim();
+  });
+  return !txt?"":((test.length==1?"":(nn.textContent.trim() + "%")) + '<DisplayString Condition="'+test.join("||")+'">'+txt+'</DisplayString>');
+}).join("\n")
+-->
+    <DisplayString Condition="first.native()=='lrFX'">Effects Layer (Photoshop 5.0)</DisplayString>
+    <DisplayString Condition="first.native()=='tySh'">Type Tool Info  (Photoshop 5.0 and 5.5 only) Has been superseded in Photoshop 6.0 and beyond by a different structure with the key 'TySh' (see See Type tool object setting (Photoshop 6.0)  See Type tool object setting ).</DisplayString>
+    <DisplayString Condition="first.native()=='luni'">Unicode layer name (Photoshop 5.0)</DisplayString>
+    <DisplayString Condition="first.native()=='lyid'">Layer ID  (Photoshop 5.0)</DisplayString>
+    <DisplayString Condition="first.native()=='lfx2'">Object-based effects layer info (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='Patt'||first.native()=='Pat2'||first.native()=='Pat3'">Patterns (Photoshop 6.0 and CS (8.0))</DisplayString>
+    <DisplayString Condition="first.native()=='Anno'">Annotations (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='clbl'">Blend clipping elements  (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='infx'">Blend interior elements  (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='knko'">Knockout setting (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='lspf'">Protected setting  (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='lclr'">Sheet color setting  (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='fxrp'">Reference point  (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='grdm'">Gradient settings  (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='lsct'">Section divider setting  (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='brst'">Channel blending restrictions setting  (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='SoCo'">Solid color sheet setting  (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='PtFl'">Pattern fill setting  (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='GdFl'">Gradient fill setting (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='vmsk'||first.native()=='vsms'">Vector mask setting  (Photoshop 6.0). If key is 'vsms' then we are writing for  (Photoshop CS6) and the document will have a 'vscg'  key</DisplayString>
+    <DisplayString Condition="first.native()=='TySh'">Type tool object setting (Photoshop 6.0) This supersedes the type tool info in Photoshop 5.0 (see See Type tool Info).</DisplayString>
+    <DisplayString Condition="first.native()=='ffxi'">Foreign effect ID (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='lnsr'">Layer name source setting (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='shpa'">Pattern data (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='shmd'">Metadata setting (Photoshop 6.0)</DisplayString>
+    <DisplayString Condition="first.native()=='lyvr'">Layer version  (Photoshop 7.0)</DisplayString>
+    <DisplayString Condition="first.native()=='tsly'">Transparency shapes layer  (Photoshop 7.0)</DisplayString>
+    <DisplayString Condition="first.native()=='lmgm'">Layer mask as global mask  (Photoshop 7.0)</DisplayString>
+    <DisplayString Condition="first.native()=='vmgm'">Vector mask as global mask  (Photoshop 7.0)</DisplayString>
+    <DisplayString Condition="first.native()=='brit'">Brightness and Contrast</DisplayString>
+    <DisplayString Condition="first.native()=='mixr'">Channel Mixer</DisplayString>
+    <DisplayString Condition="first.native()=='clrL'">Color Lookup (Photoshop CS6)</DisplayString>
+    <DisplayString Condition="first.native()=='plLd'">Placed Layer (replaced by SoLd in Photoshop CS3)</DisplayString>
+    <DisplayString Condition="first.native()=='lnkD'||first.native()=='lnk2'||first.native()=='lnk3'">Linked Layer</DisplayString>
+    <DisplayString Condition="first.native()=='phfl'">Photo Filter</DisplayString>
+    <DisplayString Condition="first.native()=='blwh'">Black White (Photoshop CS3)</DisplayString>
+    <DisplayString Condition="first.native()=='CgEd'">Content Generator Extra Data (Photoshop CS5)</DisplayString>
+    <DisplayString Condition="first.native()=='Txt2'">Text Engine Data (Photoshop CS3)</DisplayString>
+    <DisplayString Condition="first.native()=='vibA'">Vibrance (Photoshop CS3)</DisplayString>
+    <DisplayString Condition="first.native()=='pths'">Unicode Path Name (Photoshop CS6)</DisplayString>
+    <DisplayString Condition="first.native()=='anFX'">Animation Effects (Photoshop CS6)</DisplayString>
+    <DisplayString Condition="first.native()=='FMsk'">Filter Mask (Photoshop CS3)</DisplayString>
+    <DisplayString Condition="first.native()=='SoLd'">Placed Layer Data (Photoshop CS3)</DisplayString>
+    <DisplayString Condition="first.native()=='vstk'">Vector Stroke Data  (Photoshop CS6)</DisplayString>
+    <DisplayString Condition="first.native()=='vscg'">Vector Stroke Content Data  (Photoshop CS6)</DisplayString>
+    <DisplayString Condition="first.native()=='sn2P'">Using Aligned Rendering  (Photoshop CS6)</DisplayString>
+    <DisplayString Condition="first.native()=='vogk'">Vector Origination Data  (Photoshop CC)</DisplayString>
+    <DisplayString Condition="first.native()=='PxSc'">Pixel Source Data  (Photoshop CC)</DisplayString>
+    <DisplayString Condition="first.native()=='PxSD'">Pixel Source Data  (Photoshop CC 2015)</DisplayString>
+    <DisplayString Condition="first.native()=='artb'||first.native()=='artd'||first.native()=='abdd'">Artboard Data  (Photoshop CC 2015)</DisplayString>
+    <DisplayString Condition="first.native()=='SoLE'">Smart Object Layer Data  (Photoshop CC 2015)</DisplayString>
+    <DisplayString Condition="first.native()=='Mtrn'||first.native()=='Mt16'||first.native()=='Mt32'">Saving Merged Transparency</DisplayString>
+    <DisplayString Condition="first.native()=='LMsk'">User Mask</DisplayString>
+    <DisplayString Condition="first.native()=='expA'">Exposure</DisplayString>
+    <DisplayString Condition="first.native()=='FXid'||first.native()=='FEid'">Filter Effects</DisplayString>
+  </Type>
+
+</AutoVisualizer>
