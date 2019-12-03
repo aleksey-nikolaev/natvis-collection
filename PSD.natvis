@@ -44,17 +44,24 @@
         <DisplayString Condition="depth==32">FLOAT32</DisplayString>
         <DisplayString>UINT8</DisplayString>
       </Synthetic>
-      <Item Name="[channels]">channels.size()</Item>
+      <Item Name="[channels]">(channels.size()&lt;3?3:channels.size()) + (transparency.size()?1:0)</Item>
       <Synthetic Name="[width]">
         <DisplayString Condition="depth==1">{rect.width>2000?2000:((rect.width+7)/8)}</DisplayString>
         <DisplayString>{rect.width>2000?2000:rect.width}</DisplayString>
       </Synthetic>
       <Item Name="[height]">rect.height>2000?2000:rect.height</Item>
       <Item Name="[stride]">(rect.width * depth + 7) / 8</Item>
-      <Item Name="[planes]">channels.size()</Item>
-      <Synthetic Name="[data]">
-        <DisplayString Condition="channels.size()==1">{(void*)&amp;channels[0][0]}</DisplayString>
-        <DisplayString Condition="channels.size()==2">{(void*)&amp;channels[0][0]}; {(void*)&amp;channels[1][0]}</DisplayString>
+      <Item Name="[planes]">(channels.size()&lt;3?3:channels.size()) + (transparency.size()?1:0)</Item>
+      <Synthetic Name="[data]" Condition="transparency.size()">
+        <DisplayString Condition="channels.size()==1">{(void*)&amp;channels[0][0]}; {(void*)&amp;channels[0][0]}; {(void*)&amp;channels[0][0]}; {(void*)&amp;transparency[0]}</DisplayString>
+        <DisplayString Condition="channels.size()==2">{(void*)&amp;channels[1][0]}; {(void*)&amp;channels[0][0]}; {(void*)&amp;channels[0][0]}; {(void*)&amp;transparency[0]}</DisplayString>
+        <DisplayString Condition="channels.size()==3">{(void*)&amp;channels[2][0]}; {(void*)&amp;channels[1][0]}; {(void*)&amp;channels[0][0]}; {(void*)&amp;transparency[0]}</DisplayString>
+        <DisplayString Condition="channels.size()==4">{(void*)&amp;channels[3][0]}; {(void*)&amp;channels[2][0]}; {(void*)&amp;channels[1][0]}; {(void*)&amp;channels[0][0]}</DisplayString>
+        <DisplayString>{(void*)&amp;channels[0][0]}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="[data]" Condition="!transparency.size()">
+        <DisplayString Condition="channels.size()==1">{(void*)&amp;channels[0][0]}; {(void*)&amp;channels[0][0]}; {(void*)&amp;channels[0][0]}</DisplayString>
+        <DisplayString Condition="channels.size()==2">{(void*)&amp;channels[1][0]}; {(void*)&amp;channels[0][0]}; {(void*)&amp;channels[0][0]}</DisplayString>
         <DisplayString Condition="channels.size()==3">{(void*)&amp;channels[2][0]}; {(void*)&amp;channels[1][0]}; {(void*)&amp;channels[0][0]}</DisplayString>
         <DisplayString Condition="channels.size()==4">{(void*)&amp;channels[3][0]}; {(void*)&amp;channels[2][0]}; {(void*)&amp;channels[1][0]}; {(void*)&amp;channels[0][0]}</DisplayString>
         <DisplayString>{(void*)&amp;channels[0][0]}</DisplayString>
