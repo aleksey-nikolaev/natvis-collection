@@ -104,7 +104,7 @@
 
   <Type Name="psd::Parser::Layer">
     <DisplayString>
-      {{group: {groupLayer}, blend: {blend.key,view(str)}, opacity: {(int)blend.opacity}}} {name} {rectangle}
+      {name} {{blend: {blend->key,view(str)}, opacity: {(int)blend->opacity}}} {rectangle}
     </DisplayString>
   </Type>
 
