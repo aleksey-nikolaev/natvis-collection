@@ -69,10 +69,10 @@
     </Expand>
   </Type>
 
-  <Type Name="Psd::Result">
+  <Type Name="psd::Result">
     <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
   </Type>
-  <Type Name="Psd::Result">
+  <Type Name="psd::Result">
     <DisplayString>
       {{{width}, {height}, {depth}}}
     </DisplayString>
@@ -310,5 +310,4 @@ Array.from(document.querySelectorAll("body > div:nth-child(13) > div > div:nth-c
     <DisplayString Condition="first.native()=='expA'">Exposure</DisplayString>
     <DisplayString Condition="first.native()=='FXid'||first.native()=='FEid'">Filter Effects</DisplayString>
   </Type>
-
 </AutoVisualizer>
