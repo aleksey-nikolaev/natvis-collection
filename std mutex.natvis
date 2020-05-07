@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="std::_Mutex_base">
+    <Intrinsic Name="threadId" Expression="*(long*)((char*)&amp;_Mtx_storage+sizeof(_Mtx_storage)-8)"/>
+    <Intrinsic Name="lockedCount" Expression="*(int*)((char*)&amp;_Mtx_storage+sizeof(_Mtx_storage)-4)"/>
+    <Expand>
+      <Item Name="[type]">*((int*)&amp;_Mtx_storage)</Item>
+      <Item Name="[thread_id]">threadId()</Item>
+      <Item Name="[count]">lockedCount()</Item>
+    </Expand>
+  </Type>
+  
+  <Type Name="std::mutex">
+    <AlternativeType Name="std::recursive_mutex"/>
+    <DisplayString Condition="lockedCount() == 0">mutex unlocked</DisplayString>
+    <DisplayString>mutex locked({lockedCount()}) by thread (id={threadId()})</DisplayString>
+    <Expand>
+      <ExpandedItem>(_Mutex_base*)this</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <Type Name="std::timed_mutex">
+    <AlternativeType Name="std::recursive_timed_mutex"/>
+    <DisplayString Condition="_My_locked == 0">timed mutex unlocked</DisplayString>
+    <DisplayString Optional="true">recursive timed mutex locked({_My_locked}) by thread (id={_My_owner._Id})</DisplayString>
+    <DisplayString>timed mutex locked({-_My_locked})</DisplayString>
+    <Expand>
+      <ExpandedItem>_My_mutex</ExpandedItem>
+      <Item Name="[locked]">(int)_My_locked</Item>
+      <Item Name="[owner]" Optional="true">_My_owner</Item>
+    </Expand>
+  </Type>
+</AutoVisualizer>

@@ -7,7 +7,8 @@
     <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
   </Type>
 
-  <Type Name="QImageData">
+  <Type Name="QImageData" ExcludeView="recursive">
+    <Version Name="Qt5Guid.dll"/>
     <Intrinsic Name="_this" Expression="((Qt5Guid.dll!QImageData*)this)"/>
     <Intrinsic Name="_tmp" Expression="(int)_this()->format"/>
     <Intrinsic Name="colorSpace" Expression="(
@@ -15,7 +16,7 @@
                (_tmp()== 13)? 2:
                (_tmp()== 16||_tmp()== 17||_tmp()== 18)? 3:
                0)"/>
-    <Expand>
+    <Expand HideRawView="true">
       <Synthetic Name="[type]">
         <DisplayString>UINT8</DisplayString>
       </Synthetic>
@@ -32,9 +33,12 @@
     </Expand>
   </Type>
 
-  <Type Name="QImage">
+  <Type Name="QImage" ExcludeView="recursive">
+    <DisplayString Condition="d" Optional="true">{d, view(recursive)}</DisplayString>
+    <DisplayString>empty</DisplayString>
     <Expand>
-      <Item Name="image">(Qt5Guid.dll!QImageData*)d</Item>
+      <Item Name="[image]" Condition="d" Optional="true">(QImageData*)d</Item>
+      <ExpandedItem Condition="d" Optional="true">(Qt5Guid.dll!QImageData*)d, view(recursive)</ExpandedItem>
     </Expand>
   </Type>
 </AutoVisualizer>
