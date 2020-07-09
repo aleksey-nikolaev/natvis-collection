@@ -5,6 +5,32 @@
 
   <!-- Poppler -->
 
+  <Type Name="Object">
+    <DisplayString Condition="type==objNone">none</DisplayString>
+    <DisplayString Condition="type==objNull">null</DisplayString>
+    <DisplayString Condition="type==objDead">dead</DisplayString>
+    <DisplayString Condition="type==objError">objError</DisplayString>
+    <DisplayString Condition="type==objEOF">objEOF</DisplayString>
+    <DisplayString Condition="type==objBool">{booln}</DisplayString>
+    <DisplayString Condition="type==objInt">{intg}</DisplayString>
+    <DisplayString Condition="type==objReal">{real}</DisplayString>
+    <DisplayString Condition="type==objInt64">{int64g}</DisplayString>
+    <DisplayString Condition="type==objCmd||type==objName">{cString}</DisplayString>
+    <Expand>
+      <ExpandedItem Condition="type==objBool">booln</ExpandedItem>
+      <ExpandedItem Condition="type==objInt">intg</ExpandedItem>
+      <ExpandedItem Condition="type==objReal">real</ExpandedItem>
+      <ExpandedItem Condition="type==objString">string</ExpandedItem>
+      <ExpandedItem Condition="type==objInt64">int64g</ExpandedItem>
+      <ExpandedItem Condition="type==objArray">array</ExpandedItem>
+      <ExpandedItem Condition="type==objDict">dict</ExpandedItem>
+      <ExpandedItem Condition="type==objStream">stream</ExpandedItem>
+      <ExpandedItem Condition="type==objRef">ref</ExpandedItem>
+      <ExpandedItem Condition="type==objCmd||type==objName">cString</ExpandedItem>
+      <ExpandedItem>type</ExpandedItem>
+    </Expand>
+  </Type>
+
   <Type Name="SplashOutputDevice::ImageData">
     <UIVisualizer ServiceId="{A452AFEA-3DF6-46BB-9177-C0B08F318025}" Id="1" />
   </Type>
@@ -116,7 +142,7 @@
         int n;			// number of points
         int size;			// size of x/y arrays
         GBool closed;			// set if path is closed-->
-    <DisplayString Condition="closed">{{{n} points path is closed}}</DisplayString>
+    <DisplayString Condition="closed">{{{n} points, path is closed}}</DisplayString>
     <DisplayString>{{{n} points}}</DisplayString>
     <Expand>
       <CustomListItems>
@@ -125,9 +151,9 @@
           <If Condition="i &gt;= n">
             <Break />
           </If>
+          <Item Name="[curve {i}]">curve[i]</Item>
           <Item Name="[x {i}]">x[i]</Item>
           <Item Name="[y {i}]">y[i]</Item>
-          <Item Name="[curve {i}]">curve[i]</Item>
           <Exec>i++</Exec>
         </Loop>
       </CustomListItems>
@@ -185,4 +211,5 @@
       <Item Name="[stride]">rowSize</Item>
     </Expand>
   </Type>
+
 </AutoVisualizer>

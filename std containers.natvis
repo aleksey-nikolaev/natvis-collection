@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="std::array&lt;*,*&gt;" ExcludeView="stl">
+    <DisplayString Condition="$T2 == 0">{{empty}}</DisplayString>
+    <DisplayString Condition="$T2 == 1">{_Elems[0],g}</DisplayString>
+    <DisplayString Condition="$T2 == 2">({_Elems[0],g}, {_Elems[1],g})</DisplayString>
+    <DisplayString Condition="$T2 == 3">({_Elems[0],g}, {_Elems[1],g}, {_Elems[2],g})</DisplayString>
+    <DisplayString>({_Elems[0],g}) .. {{size={size()-2}}} .. ({_Elems[$T2-1],g})</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>$T2</Size>
+        <ValuePointer>_Elems</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <Type Name="std::vector&lt;*&gt;" ExcludeView="stl">
+    <Intrinsic Name="pointer" Expression="_Mypair._Myval2._Myfirst" />
+    <Intrinsic Name="pointerLast" Expression="_Mypair._Myval2._Mylast" />
+    <Intrinsic Name="size" Expression="pointerLast() - pointer()" />
+    <Intrinsic Name="capacity" Expression="_Mypair._Myval2._Myend - pointer()" />
+    <DisplayString Condition="size() == 0">{{empty}}</DisplayString>
+    <DisplayString Condition="size() == 1">{pointer()[0],g}</DisplayString>
+    <DisplayString Condition="size() == 2">({pointer()[0],g}), ({pointerLast()[-1],g})</DisplayString>
+    <DisplayString>({pointer()[0],g}) .. {{size={size()-2}}} .. ({pointerLast()[-1],g})</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>size()</Size>
+        <ValuePointer>pointer()</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <Type Name="std::set&lt;*&gt;" ExcludeView="stl">
+    <AlternativeType Name="std::multiset&lt;*&gt;" />
+    <Intrinsic Name="head" Expression="_Mypair._Myval2._Myval2._Myhead" />
+    <Intrinsic Name="size" Expression="_Mypair._Myval2._Myval2._Mysize" />
+    <DisplayString Condition="size()==0">{{empty}}</DisplayString>
+    <DisplayString Condition="size()==1">{head()-&gt;_Left-&gt;_Myval}</DisplayString>
+    <DisplayString Condition="size()==2">({head()-&gt;_Left-&gt;_Myval}), ({head()-&gt;_Right-&gt;_Myval})</DisplayString>
+    <DisplayString >({head()-&gt;_Left-&gt;_Myval}) .. {{size={size()-2}}} .. ({head()-&gt;_Right-&gt;_Myval})</DisplayString>
+    <Expand>
+      <TreeItems>
+        <Size>_Mypair._Myval2._Myval2._Mysize</Size>
+        <HeadPointer>_Mypair._Myval2._Myval2._Myhead-&gt;_Parent</HeadPointer>
+        <LeftPointer>_Left</LeftPointer>
+        <RightPointer>_Right</RightPointer>
+        <ValueNode Condition="_Isnil == 0">_Myval</ValueNode>
+      </TreeItems>
+    </Expand>
+  </Type>
+
+  <Type Name="std::map&lt;*&gt;" ExcludeView="stl">
+    <AlternativeType Name="std::multimap&lt;*&gt;" />
+    <Intrinsic Name="head" Expression="_Mypair._Myval2._Myval2._Myhead" />
+    <Intrinsic Name="size" Expression="_Mypair._Myval2._Myval2._Mysize" />
+    <DisplayString Condition="size()==0">{{empty}}</DisplayString>
+    <DisplayString Condition="size()==1">{head()-&gt;_Left-&gt;_Myval}</DisplayString>
+    <DisplayString Condition="size()==2">({head()-&gt;_Left-&gt;_Myval}), ({head()-&gt;_Right-&gt;_Myval})</DisplayString>
+    <DisplayString >({head()-&gt;_Left-&gt;_Myval}) .. {{size={size()-2}}} .. ({head()-&gt;_Right-&gt;_Myval})</DisplayString>
+    <Expand>
+      <TreeItems>
+        <Size>_Mypair._Myval2._Myval2._Mysize</Size>
+        <HeadPointer>_Mypair._Myval2._Myval2._Myhead-&gt;_Parent</HeadPointer>
+        <LeftPointer>_Left</LeftPointer>
+        <RightPointer>_Right</RightPointer>
+        <ValueNode Condition="_Isnil == 0" Name="[{_Myval.first}]">_Myval,view(MapHelper)</ValueNode>
+      </TreeItems>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>
