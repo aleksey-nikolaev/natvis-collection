@@ -112,12 +112,12 @@
         GfxSubpath **subpaths;	// subpaths
         int n;			// number of subpaths
         int size;			// size of subpaths array-->
-    <DisplayString Condition="justMoved">{{{n} subpath, new subpath was just started ({firstX}, {firstY})}}</DisplayString>
-    <DisplayString>{{{n} subpath, first point in new subpath ({firstX}, {firstY})}}</DisplayString>
+    <DisplayString Condition="justMoved">{{{n} subpath, new subpath was just started ({firstX,g}, {firstY,g})}}</DisplayString>
+    <DisplayString>{{{n} subpath, first point in new subpath ({firstX,g}, {firstY,g})}}</DisplayString>
     <Expand>
       <ArrayItems>
         <Size>n</Size>
-        <ValuePointer>(GfxSubpath **)subpaths</ValuePointer>
+        <ValuePointer>(GfxSubpath **)subpaths,g</ValuePointer>
       </ArrayItems>
     </Expand>
   </Type>
@@ -175,6 +175,12 @@
   <Type Name="poppler::GlyphDraw">
     <DisplayString Condition="clip">GlyphDraw clip "{&amp;unicode,sub}"</DisplayString>
     <DisplayString>GlyphDraw "{&amp;unicode,sub}"</DisplayString>
+  </Type>
+  <Type Name="poppler::ContourData::ContourPoint">
+    <DisplayString Condition="firstPoint&amp;&amp;!lastPoint&amp;&amp;!pathClosed&amp;&amp;!pathCurve">({x,g}, {y,g}) first point</DisplayString>
+    <DisplayString Condition="!firstPoint&amp;&amp;lastPoint&amp;&amp;!pathClosed&amp;&amp;!pathCurve">({x,g}, {y,g}) last point</DisplayString>
+    <DisplayString Condition="!firstPoint&amp;&amp;!lastPoint&amp;&amp;!pathClosed&amp;&amp;pathCurve">({x,g}, {y,g}) Bezier control point</DisplayString>
+    <DisplayString>({x,g}, {y,g}) {firstPoint?1:0} {lastPoint?1:0} {pathClosed?1:0} {pathCurve?1:0}</DisplayString>
   </Type>
   <Type Name="poppler::ContourDraw">
     <DisplayString>ContourDraw [{contourData->points}]</DisplayString>

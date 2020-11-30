@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
 
-  <Type Name="QMutex">
+  <Type Name="QMutex" Priority="MediumLow">
+    <!-- VS 2019 16.0 or earlier -->
     <DisplayString Condition="d_ptr._q_value._My_val == 0">unlocked</DisplayString>
     <DisplayString Condition="d_ptr._q_value._My_val != 0">locked {{{d_ptr._q_value._My_val}}}</DisplayString>
     <Expand>
       <Item Name="[count]">d_ptr._q_value._My_val</Item>
     </Expand>
+  </Type>
+  
+  <!--quintptr u = quintptr(d);
+  if (Q_LIKELY(u <= 0x3))
+  return false;
+  #ifdef QT_LINUX_FUTEX
+  Q_ASSERT(d->recursive);
+  return true;
+  #else
+  return d->recursive;-->
+  
+  <Type Name="QMutex">
+    <AlternativeType Name="QBasicMutex"/>
+    <!-- VS 2019 16.1 or later -->
+    <Intrinsic Optional="true" Name="atomicValue" Expression="(Qt5Cored.dll!QMutexData*)(d_ptr._q_value._Storage._Value)"/>
+    <Intrinsic Optional="true" Name="isRecursive" Expression="(quintptr)atomicValue() &lt; 4 ? false : atomicValue()-&gt;recursive"/>
+    <DisplayString Condition="isRecursive()">{(Qt5Cored.dll!QRecursiveMutexPrivate*)atomicValue(),na}</DisplayString>
+    <DisplayString Condition="(quintptr)atomicValue() == 0">unlocked</DisplayString>
+    <DisplayString>locked</DisplayString>
+    <Expand>
+      <Item Name="[count]" Condition="isRecursive()">((Qt5Cored.dll!QRecursiveMutexPrivate*)atomicValue())->count</Item>
+    </Expand>
+  </Type>
+  <Type Name="QRecursiveMutexPrivate">
+    <DisplayString>{mutex} {count}</DisplayString>
   </Type>
 
   <Type Name="QMutexLocker">

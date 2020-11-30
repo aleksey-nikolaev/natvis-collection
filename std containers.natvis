@@ -5,7 +5,7 @@
     <DisplayString Condition="$T2 == 1">{_Elems[0],g}</DisplayString>
     <DisplayString Condition="$T2 == 2">({_Elems[0],g}, {_Elems[1],g})</DisplayString>
     <DisplayString Condition="$T2 == 3">({_Elems[0],g}, {_Elems[1],g}, {_Elems[2],g})</DisplayString>
-    <DisplayString>({_Elems[0],g}) .. {{size={size()-2}}} .. ({_Elems[$T2-1],g})</DisplayString>
+    <DisplayString>({_Elems[0],g}) .. {{size={$T2-2}}} .. ({_Elems[$T2-1],g})</DisplayString>
     <Expand>
       <ArrayItems>
         <Size>$T2</Size>
