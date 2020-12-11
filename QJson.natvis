@@ -1,7 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
 
+  <Type Name="QJsonDocument">
+    <DisplayString Condition="!d._Mypair._Myval2">empty</DisplayString>
+    <Expand>
+      <ExpandedItem Condition="d._Mypair._Myval2">((Qt5Cored.dll!QJsonDocumentPrivate*)(d._Mypair._Myval2))->value</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <Type Name="QJsonValue">
+    <Intrinsic Name="cbor" Expression="(Qt5Cored.dll!QCborContainerPrivate*)d.d"></Intrinsic>
+    <DisplayString Condition="t == QCborValue::Null">nullptr</DisplayString>
+    <DisplayString Condition="t == QCborValue::False">false</DisplayString>
+    <DisplayString Condition="t == QCborValue::True">true</DisplayString>
+    <DisplayString Condition="t == QCborValue::Integer">{n}</DisplayString>
+    <DisplayString Condition="t == QCborValue::Double">{*(double*)&amp;n}</DisplayString>
+    <DisplayString Condition="t == QCborValue::String">{cbor()->byteDataAt(n)->str(),[cbor()->byteDataAt(n)->len]na}</DisplayString>
+    <Expand>
+      <Item Name="array" Condition="t == QCborValue::Array">cbor()</Item>
+      <Item Name="object" Condition="t == QCborValue::Map">cbor(),view(map)</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="QJsonArray">
+    <Intrinsic Name="cbor" Expression="(Qt5Cored.dll!QCborContainerPrivate*)a.d"></Intrinsic>
+    <Expand>
+      <ExpandedItem>cbor()</ExpandedItem>
+    </Expand>
+  </Type>
+
   <Type Name="QJsonObject">
+    <Intrinsic Name="cbor" Expression="(Qt5Cored.dll!QCborContainerPrivate*)o.d"></Intrinsic>
+    <DisplayString Condition="!cbor()">empty</DisplayString>
+    <Expand>
+      <ExpandedItem Condition="cbor()">cbor(),view(map)</ExpandedItem>
+    </Expand>
+  </Type>
+
+  <Type Name="QCborValue">
+    <DisplayString Condition="t == QCborValue::Null">nullptr</DisplayString>
+    <DisplayString Condition="t == QCborValue::False">false</DisplayString>
+    <DisplayString Condition="t == QCborValue::True">true</DisplayString>
+    <DisplayString Condition="t == QCborValue::Integer">{n}</DisplayString>
+    <DisplayString Condition="t == QCborValue::Double">{*(double*)&amp;n}</DisplayString>
+    <DisplayString Condition="t == QCborValue::String">{container->byteDataAt(n)->str(),[container->byteDataAt(n)->len]na}</DisplayString>
+    <Expand>
+      <Item Name="array" Condition="t == QCborValue::Array">container,na</Item>
+      <Item Name="object" Condition="t == QCborValue::Map">container,view(map)na</Item>
+    </Expand>
+  </Type>
+
+  <Type Name="QCborContainerPrivate" ExcludeView="rec">
+    <Intrinsic Name="tt" Expression="(Qt5Cored.dll!QCborContainerPrivate*)this"></Intrinsic>
+    <Intrinsic Name="byteDataAt" Expression="((Qt5Cored.dll!QtCbor::ByteData*)(tt()->data.data() + (int)(tt()->elements.at(n).value)))">
+      <Parameter Name="n" Type="int"/>
+    </Intrinsic>
+
+    <Expand>
+      <CustomListItems Condition="tt()->elements.size() &gt; 0" ExcludeView="map">
+        <Variable Name="i" InitialValue="0"/>
+        <Loop Condition="i &lt; tt()->elements.size()">
+          <If Condition="tt()->elements.at(i).flags.i &amp; Qt5Cored.dll!QtCbor::Element::HasByteData">
+            <If Condition="tt()->elements.at(i).type == Qt5Cored.dll!QCborValue::String">
+              <Item Name="[{i}]">byteDataAt(i)->str(),[byteDataAt(i)->len]na</Item>
+            </If>
+            <Else>
+              <Item Name="[{i}]">tt()->elements.at(i)</Item>
+            </Else>
+          </If>
+          <Elseif Condition="tt()->elements.at(i).flags.i &amp; Qt5Cored.dll!QtCbor::Element::IsContainer">
+            <If Condition="tt()->elements.at(i).type == Qt5Cored.dll!QCborValue::Array">
+              <Item Name="[{i}] array">tt()->elements.at(i).container,na</Item>
+            </If>
+            <Else>
+              <Item Name="[{i}] map">tt()->elements.at(i).container,view(map)na</Item>
+            </Else>
+          </Elseif>
+          <Else>
+            <Item Name="[{i}]">tt()->elements.at(i)</Item>
+          </Else>
+          <Exec>++i</Exec>
+        </Loop>
+      </CustomListItems>
+
+
+      <CustomListItems Condition="tt()->elements.size() &gt; 0" IncludeView="map">
+        <Variable Name="key" InitialValue="(const char *)0"/>
+        <Variable Name="len" InitialValue="0"/>
+        <Variable Name="i" InitialValue="0"/>
+        <Loop Condition="i &lt; tt()->elements.size()">
+          <If Condition="(i&amp;1) == 0">
+            <Exec>key = byteDataAt(i)->str()</Exec>
+            <Exec>len = byteDataAt(i)->len</Exec>
+          </If>
+          <Else>
+            <If Condition="tt()->elements.at(i).flags.i &amp; Qt5Cored.dll!QtCbor::Element::HasByteData">
+              <If Condition="tt()->elements.at(i).type == Qt5Cored.dll!QCborValue::String">
+                <Item Name="[{key,[len]na}]">byteDataAt(i)->str(),[byteDataAt(i)->len]na</Item>
+              </If>
+              <Else>
+                <Item Name="[{key,[len]na}]">tt()->elements.at(i)</Item>
+              </Else>
+            </If>
+            <Elseif Condition="tt()->elements.at(i).flags.i &amp; Qt5Cored.dll!QtCbor::Element::IsContainer">
+              <If Condition="tt()->elements.at(i).type == Qt5Cored.dll!QCborValue::Array">
+                <Item Name="[{key,[len]na}] array">tt()->elements.at(i).container,na</Item>
+              </If>
+              <Else>
+                <Item Name="[{key,[len]na}] map">tt()->elements.at(i).container,view(map)na</Item>
+              </Else>
+            </Elseif>
+            <Else>
+              <Item Name="[{key,[len]na}]">tt()->elements.at(i)</Item>
+            </Else>
+          </Else>
+          <Exec>++i</Exec>
+        </Loop>
+      </CustomListItems>
+
+      <!--<Item Name="rrrrrrrrrr">
+        tt(),view(rec)
+      </Item>-->
+    </Expand>
+  </Type>
+
+  <Type Name="QtCbor::ByteData">
+    <Intrinsic Name="str" Expression="(const char *)(this + 1)" ModuleName="Qt5Cored.dll"></Intrinsic>
+  </Type>
+
+  <Type Name="QtCbor::Element" ExcludeView="rec">
+    <DisplayString Condition="type == QCborValue::Null">nullptr</DisplayString>
+    <DisplayString Condition="type == QCborValue::False">false</DisplayString>
+    <DisplayString Condition="type == QCborValue::True">true</DisplayString>
+    <DisplayString Condition="type == QCborValue::Integer">{value}</DisplayString>
+    <DisplayString Condition="type == QCborValue::Double">{*(double*)&amp;value}</DisplayString>
+  </Type>
+
+  <Type Name="QJsonObject" Priority="MediumLow">
     <Expand>
       <Item Name="object null" Condition="!this->o">nullptr</Item>
       <CustomListItems Condition="!!this->o">
@@ -12,7 +147,7 @@
     </Expand>
   </Type>
 
-  <Type Name="QJsonArray">
+  <Type Name="QJsonArray" Priority="MediumLow">
     <Expand>
       <Item Name="array null" Condition="!this->a">nullptr</Item>
       <CustomListItems Condition="!!this->a">
@@ -49,9 +184,9 @@
     </Expand>
   </Type>
 
-  <Type Name="QJsonValue">
+  <Type Name="QJsonValue" Priority="MediumLow">
+    <DisplayString Condition="t == 0">nullptr</DisplayString>
     <Expand>
-      <Item Name="null" Condition="t == 0">nullptr</Item>
       <Item Name="boolean" Condition="t == 1">b</Item>
       <Item Name="float" Condition="t == 2">dbl</Item>
       <Item Name="string" Condition="t == 3">stringData</Item>
@@ -60,9 +195,7 @@
     </Expand>
   </Type>
 
-  <Type Name="Qt5Cored.dll!QJsonPrivate::qle_bitfield&lt;*,*&gt;">
-    <AlternativeType Name="QJsonPrivate::qle_bitfield&lt;*,*&gt;"/>
-    <AlternativeType Name="Qt5Cored.dll!QJsonPrivate::qle_signedbitfield&lt;*,*&gt;"/>
+  <Type Name="QJsonPrivate::qle_bitfield&lt;*,*&gt;">
     <AlternativeType Name="QJsonPrivate::qle_signedbitfield&lt;*,*&gt;"/>
     <DisplayString>{(val &gt;&gt; $T1) &amp; ((1 &lt;&lt; $T2) - 1)} </DisplayString>
     <Expand>
@@ -70,13 +203,11 @@
     </Expand>
   </Type>
 
-  <Type Name="Qt5Cored.dll!QJsonPrivate::q_littleendian&lt;*&gt;">
-    <AlternativeType Name="QJsonPrivate::q_littleendian&lt;*&gt;"/>
+  <Type Name="QJsonPrivate::q_littleendian&lt;*&gt;">
     <DisplayString>{val}</DisplayString>
   </Type>
 
-  <Type Name="Qt5Cored.dll!QJsonPrivate::Object">
-    <AlternativeType Name="QJsonPrivate::Object"/>
+  <Type Name="QJsonPrivate::Object">
     <Expand>
       <CustomListItems>
         <Variable Name="i" InitialValue="0"/>
@@ -107,8 +238,7 @@
     </Expand>
   </Type>
 
-  <Type Name="Qt5Cored.dll!QJsonPrivate::Array">
-    <AlternativeType Name="QJsonPrivate::Array"/>
+  <Type Name="QJsonPrivate::Array">
     <Expand>
       <CustomListItems>
         <Variable Name="i" InitialValue="0"/>
@@ -147,25 +277,21 @@
     </Expand>
   </Type>
 
-  <Type Name="Qt5Cored.dll!QJsonPrivate::Latin1String::Data">
-    <AlternativeType Name="QJsonPrivate::Latin1String::Data"/>
+  <Type Name="QJsonPrivate::Latin1String::Data">
     <DisplayString>{latin1, [length.val] s8} </DisplayString>
   </Type>
 
-  <Type Name="Qt5Cored.dll!QJsonPrivate::String::Data">
-    <AlternativeType Name="QJsonPrivate::String::Data"/>
+  <Type Name="QJsonPrivate::String::Data">
     <DisplayString>{utf16, [length.val] su}</DisplayString>
   </Type>
 
-  <Type Name="Qt5Cored.dll!QJsonPrivate::Entry">
-    <AlternativeType Name="QJsonPrivate::Entry"/>
+  <Type Name="QJsonPrivate::Entry">
     <Expand>
       <Item Name="Value">value</Item>
     </Expand>
   </Type>
 
-  <Type Name="Qt5Cored.dll!QJsonPrivate::Value">
-    <AlternativeType Name="QJsonPrivate::Value"/>
+  <Type Name="QJsonPrivate::Value">
     <Expand>
       <CustomListItems>
         <Variable Name="typ" InitialValue="(type.val &amp; 7)"/>

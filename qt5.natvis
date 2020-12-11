@@ -291,14 +291,15 @@ Motivation: I'm not use this add-in. So, the original file didn't work as expect
   </Type>
 
   <Type Name="QByteArray">
-    <DisplayString>{((reinterpret_cast&lt;char*&gt;(d)) + d-&gt;offset),sb}</DisplayString>
-    <StringView>((reinterpret_cast&lt;char*&gt;(d)) + d-&gt;offset),sb</StringView>
+    <Intrinsic Name="data" Expression="((reinterpret_cast&lt;char*&gt;(d)) + d-&gt;offset)"></Intrinsic>
+    <DisplayString>{data(),sb}</DisplayString>
+    <StringView>data(),sb</StringView>
     <Expand>
       <Item Name="[size]">d-&gt;size</Item>
       <Item Name="[referenced]">d-&gt;ref.atomic._q_value</Item>
       <ArrayItems>
         <Size>d-&gt;size</Size>
-        <ValuePointer>((reinterpret_cast&lt;char*&gt;(d)) + d-&gt;offset),c</ValuePointer>
+        <ValuePointer>data(),c</ValuePointer>
       </ArrayItems>
     </Expand>
   </Type>
@@ -433,6 +434,11 @@ Motivation: I'm not use this add-in. So, the original file didn't work as expect
 
   <Type Name="QVector&lt;*&gt;">
     <AlternativeType Name="QStack&lt;*&gt;"></AlternativeType>
+    <Intrinsic Name="size" Expression="d ? d-&gt;size : 0"/>
+    <Intrinsic Name="data" Expression="($T1*)((char*)d + d-&gt;offset)"/>
+    <Intrinsic Name="at" Expression="data()[id]">
+      <Parameter Name="id" Type="int"/>
+    </Intrinsic>
     <DisplayString Condition="d">{{ size = {d-&gt;size} }}</DisplayString>
     <DisplayString>empty</DisplayString>
     <Expand>

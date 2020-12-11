@@ -9,7 +9,7 @@
       <Item Name="[count]">d_ptr._q_value._My_val</Item>
     </Expand>
   </Type>
-  
+
   <!--quintptr u = quintptr(d);
   if (Q_LIKELY(u <= 0x3))
   return false;
@@ -18,7 +18,7 @@
   return true;
   #else
   return d->recursive;-->
-  
+
   <Type Name="QMutex">
     <AlternativeType Name="QBasicMutex"/>
     <!-- VS 2019 16.1 or later -->
